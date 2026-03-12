@@ -5,6 +5,19 @@ export type Pet = {
   image_url: string;
   name: string;
   price: number;
-  size: string;
-  species: string;
+  size: PetSize;
+  species: PetSpecies;
 };
+
+export enum PetSize {
+  SMALL = "small",
+  MEDIUM = "medium",
+  LARGE = "large",
+}
+
+export enum PetSpecies {
+  BIRD = "bird",
+  RABBIT = "rabbit",
+  DOG = "dog",
+  CAT = "cat",
+}

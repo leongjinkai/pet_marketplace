@@ -5,6 +5,7 @@ A basic marketplace application for listing and discovering pets, built with **N
 ## Getting Started
 
 ### Prerequisites
+
 - **Node.js** (LTS recommended)
 - **npm** (comes with Node) or another package manager
 
@@ -50,13 +51,36 @@ npm start
 - **Framework**: Next.js
 - **Language**: TypeScript
 - **UI**: React
+- **Components**: Shadcn
 
 ## Roadmap / TODO
 
-- Pet Listing Page
-- Pet Detail View
-- Inquiry Form
+### Pet Listing Page
+
+- [ ] Fetch Pets
+- [ ] Render each pet as a card/row
+- [ ] Unavailable pets should be visually distinguishable
+
+### Filters (Support species, size and availability query parameters)
+
+- [ ] Filters update display results
+- [ ] UI handle loading and error states
+
+### Pet Detail View
+
+- [ ] When user select a pet from listing page, show a detail view (Image, Details, Inquire CTA)
+- [ ] If pet unavailable, inquiry action should be disabled
+
+### Inquiry Form
+
+- [ ] Submit Inquiry Form
+- [ ] Form Validation
+- [ ] Handle Form submission Success with inquiryId, receivedAt, Pet name and image
+- [ ] Handle Form submission Error
+- [ ] Prevent Duplicate Submissions when request is in flight
 
 ## Assumptions Made
+
+1. Options for the filters are called and received separately from another endpoint. (Currently the types in listing-types are assumed to be all the size, species and availability options)
 
 ## Key Tradeoffs
