@@ -1,13 +1,11 @@
-import { Button } from "@/components/ui/button";
+import { fetchPets } from "@/lib/api";
 import { Pet } from "@/types/listing-types";
 import Image from "next/image";
 
 export default async function ListingPage() {
-  const data = await fetch("https://pets-intrvw.up.railway.app/pets");
-  const response: { data: Pet[] } = await data.json();
-  console.log(response.data);
+  const pets = await fetchPets();
 
-  const petListings = response.data.map((pet: Pet): React.ReactNode => {
+  const petListings = pets.map((pet: Pet): React.ReactNode => {
     return (
       <div key={pet.id}>
         <h2>{pet.name}</h2>
@@ -20,7 +18,6 @@ export default async function ListingPage() {
   return (
     <div>
       <h1>Pet Listings</h1>
-      <Button>Add Pet</Button>
       {petListings}
     </div>
   );
