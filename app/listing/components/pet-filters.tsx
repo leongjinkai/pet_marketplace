@@ -19,6 +19,7 @@ export function PetFilters({ uniqueSpecies, uniqueSizes }: PetFiltersProps) {
     handleSizeToggle,
     handleAvailableChange,
     applyFilters,
+    resetFilters,
   } = usePetFilters();
 
   return (
@@ -34,6 +35,7 @@ export function PetFilters({ uniqueSpecies, uniqueSizes }: PetFiltersProps) {
         handleSizeToggle={handleSizeToggle}
         handleAvailableChange={handleAvailableChange}
         applyFilters={applyFilters}
+        resetFilters={resetFilters}
       />
       <DesktopFilters
         uniqueSpecies={uniqueSpecies}
@@ -45,6 +47,7 @@ export function PetFilters({ uniqueSpecies, uniqueSizes }: PetFiltersProps) {
         handleSizeToggle={handleSizeToggle}
         handleAvailableChange={handleAvailableChange}
         applyFilters={applyFilters}
+        resetFilters={resetFilters}
       />
     </>
   );

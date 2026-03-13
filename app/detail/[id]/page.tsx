@@ -4,11 +4,11 @@ import { PetDetailSkeleton } from "./components/pet-detail-skeleton";
 import { BackButton } from "@/components/common/back-button";
 
 interface DetailPageProps {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }
 
-export default async function DetailPage({ params }: DetailPageProps) {
-  const { id } = await params;
+export default function DetailPage({ params }: DetailPageProps) {
+  const { id } = params;
 
   return (
     <div className="container mx-auto px-4 py-8">

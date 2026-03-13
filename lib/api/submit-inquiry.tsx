@@ -28,12 +28,15 @@ export async function submitInquiry(
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({
-        error: response.statusText,
-      }));
+      const errorData = await response.json().catch(() => null);
+      const serverMessage =
+        (errorData &&
+          (errorData.error || errorData.message || errorData.detail)) ||
+        null;
+
       throw new Error(
-        errorData.error ||
-          `Failed to submit inquiry: ${response.status} ${response.statusText}`
+        serverMessage ||
+          "We couldn't submit your inquiry right now. Please try again in a moment."
       );
     }
 

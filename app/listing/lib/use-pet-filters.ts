@@ -27,6 +27,7 @@ export interface UsePetFiltersReturn {
   handleSizeToggle: (size: string) => void;
   handleAvailableChange: (value: AvailableFilter) => void;
   applyFilters: () => void;
+  resetFilters: () => void;
 }
 
 interface FilterState {
@@ -222,7 +223,23 @@ export function usePetFilters(): UsePetFiltersReturn {
       router.push(`/listing${queryString ? `?${queryString}` : ""}`);
       persistFiltersToStorage(currentFilters);
     });
-  }, [router, localSpecies, localSizes, localAvailable, isOptimisticUpdateRef]);
+  }, [router, localSpecies, localSizes, localAvailable]);
+
+  const resetFilters = useCallback(() => {
+    const initial: FilterState = {
+      species: [],
+      sizes: [],
+      available: AvailableFilter.All,
+    };
+
+    isOptimisticUpdateRef.current = true;
+    updateLocalFilters(initial);
+
+    startTransition(() => {
+      router.push("/listing");
+      persistFiltersToStorage(initial);
+    });
+  }, [router, updateLocalFilters]);
 
   // Create toggle handlers
   const handleSpeciesToggle = useCallback(
@@ -272,5 +289,6 @@ export function usePetFilters(): UsePetFiltersReturn {
     handleSizeToggle,
     handleAvailableChange,
     applyFilters,
+    resetFilters,
   };
 }

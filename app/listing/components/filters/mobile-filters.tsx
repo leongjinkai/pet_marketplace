@@ -23,6 +23,7 @@ interface MobileFiltersProps {
   handleSizeToggle: (size: string) => void;
   handleAvailableChange: (value: AvailableFilter) => void;
   applyFilters: () => void;
+  resetFilters: () => void;
 }
 
 export function MobileFilters({
@@ -36,6 +37,7 @@ export function MobileFilters({
   handleSizeToggle,
   handleAvailableChange,
   applyFilters,
+  resetFilters,
 }: MobileFiltersProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -62,36 +64,46 @@ export function MobileFilters({
             <div>
               <h3 className="mb-2 text-sm font-semibold">Species</h3>
               <div className="space-y-2">
-                {uniqueSpecies.map((species) => (
-                  <label
-                    key={species}
-                    className="flex items-center space-x-2 cursor-pointer"
-                  >
-                    <Checkbox
-                      checked={selectedSpecies.includes(species)}
-                      onCheckedChange={() => handleSpeciesToggle(species)}
-                    />
-                    <span className="text-sm capitalize">{species}</span>
-                  </label>
-                ))}
+                {uniqueSpecies.map((species) => {
+                  const id = `mobile-species-${species}`;
+                  return (
+                    <label
+                      key={species}
+                      htmlFor={id}
+                      className="flex items-center space-x-2 cursor-pointer"
+                    >
+                      <Checkbox
+                        id={id}
+                        checked={selectedSpecies.includes(species)}
+                        onCheckedChange={() => handleSpeciesToggle(species)}
+                      />
+                      <span className="text-sm capitalize">{species}</span>
+                    </label>
+                  );
+                })}
               </div>
             </div>
 
             <div>
               <h3 className="mb-2 text-sm font-semibold">Size</h3>
               <div className="space-y-2">
-                {uniqueSizes.map((size) => (
-                  <label
-                    key={size}
-                    className="flex items-center space-x-2 cursor-pointer"
-                  >
-                    <Checkbox
-                      checked={selectedSizes.includes(size)}
-                      onCheckedChange={() => handleSizeToggle(size)}
-                    />
-                    <span className="text-sm capitalize">{size}</span>
-                  </label>
-                ))}
+                {uniqueSizes.map((size) => {
+                  const id = `mobile-size-${size}`;
+                  return (
+                    <label
+                      key={size}
+                      htmlFor={id}
+                      className="flex items-center space-x-2 cursor-pointer"
+                    >
+                      <Checkbox
+                        id={id}
+                        checked={selectedSizes.includes(size)}
+                        onCheckedChange={() => handleSizeToggle(size)}
+                      />
+                      <span className="text-sm capitalize">{size}</span>
+                    </label>
+                  );
+                })}
               </div>
             </div>
 
@@ -143,10 +155,17 @@ export function MobileFilters({
               </RadioGroup>
             </div>
 
-            <div className="pt-2 border-t">
+            <div className="flex items-center justify-between gap-2 pt-2 border-t">
+              <Button
+                onClick={resetFilters}
+                variant="outline"
+                className="cursor-pointer"
+              >
+                Clear
+              </Button>
               <Button
                 onClick={handleApplyFilters}
-                className="w-full cursor-pointer"
+                className="flex-1 cursor-pointer"
                 variant="default"
               >
                 Apply Filters

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Pet } from "@/types/listing-types";
+import type { Pet } from "@/types/listing-types";
 import { submitInquiry, type InquiryResponse } from "@/lib/api/submit-inquiry";
 import { validateInquiryForm, type ValidationErrors } from "./utils";
 
@@ -31,12 +31,14 @@ export interface UseInquiryFormReturn {
 }
 
 export function useInquiryForm(pet: Pet): UseInquiryFormReturn {
-  const [open, setOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uiState, setUiState] = useState({
+    open: false,
+    isSubmitting: false,
+    showSuccessDialog: false,
+    showErrorDialog: false,
+  });
   const [successData, setSuccessData] = useState<InquiryResponse | null>(null);
-  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [showErrorDialog, setShowErrorDialog] = useState(false);
   const [formData, setFormData] = useState<InquiryFormData>({
     petId: pet.id,
     fullName: "",
@@ -44,6 +46,16 @@ export function useInquiryForm(pet: Pet): UseInquiryFormReturn {
     message: "",
   });
   const [errors, setErrors] = useState<ValidationErrors>({});
+
+  const { open, isSubmitting, showSuccessDialog, showErrorDialog } = uiState;
+
+  const setOpen = (open: boolean) => setUiState((prev) => ({ ...prev, open }));
+
+  const setShowSuccessDialog = (show: boolean) =>
+    setUiState((prev) => ({ ...prev, showSuccessDialog: show }));
+
+  const setShowErrorDialog = (show: boolean) =>
+    setUiState((prev) => ({ ...prev, showErrorDialog: show }));
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -65,7 +77,7 @@ export function useInquiryForm(pet: Pet): UseInquiryFormReturn {
       return;
     }
 
-    setIsSubmitting(true);
+    setUiState((prev) => ({ ...prev, isSubmitting: true }));
 
     try {
       const response = await submitInquiry(formData);
@@ -74,8 +86,13 @@ export function useInquiryForm(pet: Pet): UseInquiryFormReturn {
       setSuccessData(response);
       setFormData({ petId: pet.id, fullName: "", email: "", message: "" });
       setErrors({});
-      setOpen(false);
-      setShowSuccessDialog(true);
+      setUiState((prev) => ({
+        ...prev,
+        isSubmitting: false,
+        open: false,
+        showSuccessDialog: true,
+        showErrorDialog: false,
+      }));
     } catch (error) {
       console.error("Error submitting inquiry:", error);
       // Show error message to user via dialog
@@ -84,9 +101,11 @@ export function useInquiryForm(pet: Pet): UseInquiryFormReturn {
           ? error.message
           : "Failed to submit inquiry. Please try again.";
       setErrorMessage(message);
-      setShowErrorDialog(true);
-    } finally {
-      setIsSubmitting(false);
+      setUiState((prev) => ({
+        ...prev,
+        isSubmitting: false,
+        showErrorDialog: true,
+      }));
     }
   };
 
