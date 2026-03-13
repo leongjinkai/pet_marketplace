@@ -1,6 +1,39 @@
 import { FetchPetsFilters } from "@/lib/api/fetch-pets";
 import { PetSpecies, PetSize } from "@/types/listing-types";
 
+/**
+ * Normalizes a search param value to an array or undefined.
+ * - If already an array, returns it
+ * - If a string, wraps it in an array
+ * - If undefined, returns undefined
+ */
+function normalizeToArray(
+  value: string | string[] | undefined
+): string[] | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+  return Array.isArray(value) ? value : [value];
+}
+
+/**
+ * Normalizes a search param value to a boolean or undefined.
+ * - If "true", returns true
+ * - If "false", returns false
+ * - Otherwise, returns undefined
+ */
+function normalizeToBoolean(
+  value: string | string[] | undefined
+): boolean | undefined {
+  if (value === "true") {
+    return true;
+  }
+  if (value === "false") {
+    return false;
+  }
+  return undefined;
+}
+
 export function parseFiltersFromSearchParams(searchParams: {
   [key: string]: string | string[] | undefined;
 }): FetchPetsFilters {
@@ -8,22 +41,9 @@ export function parseFiltersFromSearchParams(searchParams: {
   const sizeParam = searchParams.size;
   const availableParam = searchParams.available;
 
-  const species = Array.isArray(speciesParam)
-    ? speciesParam
-    : speciesParam
-      ? [speciesParam]
-      : undefined;
-  const size = Array.isArray(sizeParam)
-    ? sizeParam
-    : sizeParam
-      ? [sizeParam]
-      : undefined;
-  const available =
-    availableParam === "true"
-      ? true
-      : availableParam === "false"
-        ? false
-        : undefined;
+  const species = normalizeToArray(speciesParam);
+  const size = normalizeToArray(sizeParam);
+  const available = normalizeToBoolean(availableParam);
 
   // Build filters object
   const filters: FetchPetsFilters = {};
@@ -53,26 +73,28 @@ export function validateSearchParams(searchParams: {
   // Validate species values
   const speciesParam = searchParams.species;
   if (speciesParam) {
-    const speciesArray = Array.isArray(speciesParam)
-      ? speciesParam
-      : [speciesParam];
-    const hasInvalidSpecies = speciesArray.some(
-      (s) => !validSpecies.includes(s as PetSpecies)
-    );
-    if (hasInvalidSpecies) {
-      return false;
+    const speciesArray = normalizeToArray(speciesParam);
+    if (speciesArray) {
+      const hasInvalidSpecies = speciesArray.some(
+        (s) => !validSpecies.includes(s as PetSpecies)
+      );
+      if (hasInvalidSpecies) {
+        return false;
+      }
     }
   }
 
   // Validate size values
   const sizeParam = searchParams.size;
   if (sizeParam) {
-    const sizeArray = Array.isArray(sizeParam) ? sizeParam : [sizeParam];
-    const hasInvalidSize = sizeArray.some(
-      (s) => !validSizes.includes(s as PetSize)
-    );
-    if (hasInvalidSize) {
-      return false;
+    const sizeArray = normalizeToArray(sizeParam);
+    if (sizeArray) {
+      const hasInvalidSize = sizeArray.some(
+        (s) => !validSizes.includes(s as PetSize)
+      );
+      if (hasInvalidSize) {
+        return false;
+      }
     }
   }
 
