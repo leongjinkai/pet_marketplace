@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PetImage } from "@/components/common/pet-image";
-import { capitalizeFirst } from "@/lib/utils";
 
 interface PetCardProps {
   pet: Pet;
@@ -19,8 +18,12 @@ export function PetCard({ pet }: PetCardProps) {
         <CardHeader>
           <CardTitle>{pet.name}</CardTitle>
           <div className="flex flex-wrap gap-2">
-            <Badge variant="secondary">{capitalizeFirst(pet.species)}</Badge>
-            <Badge variant="secondary">{capitalizeFirst(pet.size)}</Badge>
+            <Badge variant="secondary" className="capitalize">
+              {pet.species}
+            </Badge>
+            <Badge variant="secondary" className="capitalize">
+              {pet.size}
+            </Badge>
             <Badge variant="secondary">{pet.age_months} months old</Badge>
             <Badge
               className={
