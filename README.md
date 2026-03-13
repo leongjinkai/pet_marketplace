@@ -46,13 +46,15 @@ npm start
     - `inquiries/route.ts` – API route for submitting inquiries
   - `listing/`
     - `page.tsx` – Listing page (pets list + filters)
+    - `provider/`
+      - `listing-ui-context.tsx` – React context for listing UI state (e.g. "applying filters" transition)
     - `components/`
       - `pet-card.tsx`, `pet-card-skeleton.tsx`, `pet-grid.tsx`, `pets-list.tsx`, `pet-filters.tsx`, `no-results.tsx` – Listing UI components
       - `filters/` – Filter UI (mobile/desktop, checkbox/radio controls)
     - `lib/`
       - `data.ts` – Static data used for listings
       - `filters.ts` – Parsing and validation of listing URL filters
-      - `use-pet-filters.ts` – Hook for managing filter state and URL syncing
+      - `use-pet-filters.ts` – Hook for managing filter state and URL syncing, integrated with listing UI context
   - `detail/[id]/`
     - `page.tsx` – Pet detail page entry
     - `components/`
@@ -130,7 +132,7 @@ This ensures code style and linting are enforced before every commit.
 - **UI**: React
 - **UI Library**: Shadcn + Tailwind
 - **Data Fetching**: fetch
-- **State Management**: React useState hook
+- **State Management**: React hooks (including context + transitions for listing UI state)
 
 ## Roadmap
 
