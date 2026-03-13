@@ -154,33 +154,31 @@ export function MobileFilters({
               </RadioGroup>
             </div>
 
-            {hasSelectedFilters && (
-              <div className="flex items-center justify-between gap-2 pt-2 border-t">
-                <Button
-                  onClick={resetFilters}
-                  variant="outline"
-                  className="cursor-pointer"
-                  disabled={isApplyingFilters}
-                >
-                  Clear
-                </Button>
-                <Button
-                  onClick={handleApplyFilters}
-                  className="flex-1 cursor-pointer"
-                  variant="default"
-                  disabled={isApplyingFilters}
-                >
-                  {isApplyingFilters ? (
-                    <span className="inline-flex items-center justify-center gap-2">
-                      <Spinner className="size-3" />
-                      Applying…
-                    </span>
-                  ) : (
-                    "Apply Filters"
-                  )}
-                </Button>
-              </div>
-            )}
+            <div className="flex items-center justify-between gap-2 pt-2 border-t">
+              <Button
+                onClick={resetFilters}
+                variant="outline"
+                className="cursor-pointer"
+                disabled={isApplyingFilters || !hasSelectedFilters}
+              >
+                Clear
+              </Button>
+              <Button
+                onClick={handleApplyFilters}
+                className="flex-1 cursor-pointer"
+                variant="default"
+                disabled={isApplyingFilters}
+              >
+                {isApplyingFilters ? (
+                  <span className="inline-flex items-center justify-center gap-2">
+                    <Spinner className="size-3" />
+                    Applying…
+                  </span>
+                ) : (
+                  "Apply Filters"
+                )}
+              </Button>
+            </div>
           </div>
         </PopoverContent>
       </Popover>

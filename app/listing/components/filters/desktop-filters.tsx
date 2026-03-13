@@ -46,33 +46,29 @@ export function DesktopFilters({
         availableFilter={availableFilter}
         handleAvailableChange={handleAvailableChange}
       />
-      {hasSelectedFilters && (
-        <>
-          <Button
-            onClick={applyFilters}
-            variant="default"
-            className="ml-auto cursor-pointer"
-            disabled={isApplyingFilters}
-          >
-            {isApplyingFilters ? (
-              <span className="inline-flex items-center justify-center gap-2">
-                <Spinner className="size-4" />
-                Applying…
-              </span>
-            ) : (
-              "Apply Filters"
-            )}
-          </Button>
-          <Button
-            onClick={resetFilters}
-            variant="outline"
-            className="cursor-pointer"
-            disabled={isApplyingFilters}
-          >
-            Clear
-          </Button>
-        </>
-      )}
+      <Button
+        onClick={applyFilters}
+        variant="default"
+        className="ml-auto cursor-pointer"
+        disabled={isApplyingFilters}
+      >
+        {isApplyingFilters ? (
+          <span className="inline-flex items-center justify-center gap-2">
+            <Spinner className="size-4" />
+            Applying…
+          </span>
+        ) : (
+          "Apply Filters"
+        )}
+      </Button>
+      <Button
+        onClick={resetFilters}
+        variant="outline"
+        className="cursor-pointer"
+        disabled={isApplyingFilters || !hasSelectedFilters}
+      >
+        Clear
+      </Button>
     </div>
   );
 }
