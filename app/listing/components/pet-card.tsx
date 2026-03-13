@@ -1,13 +1,7 @@
 import { Pet } from "@/types/listing-types";
 import Link from "next/link";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { PetImage } from "@/components/common/pet-image";
 import { capitalizeFirst } from "@/lib/utils";
 
@@ -24,23 +18,24 @@ export function PetCard({ pet }: PetCardProps) {
         </div>
         <CardHeader>
           <CardTitle>{pet.name}</CardTitle>
-          <CardDescription>
-            {capitalizeFirst(pet.species)} • {capitalizeFirst(pet.size)} •{" "}
-            {pet.age_months} months old
-          </CardDescription>
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="secondary">{capitalizeFirst(pet.species)}</Badge>
+            <Badge variant="secondary">{capitalizeFirst(pet.size)}</Badge>
+            <Badge variant="secondary">{pet.age_months} months old</Badge>
+            <Badge
+              className={
+                pet.available
+                  ? "bg-green-600 text-white hover:bg-green-700"
+                  : "bg-red-600 text-white hover:bg-red-700"
+              }
+            >
+              {pet.available ? "Available" : "Not Available"}
+            </Badge>
+          </div>
         </CardHeader>
         <CardContent>
           <p className="text-2xl font-bold">${pet.price}</p>
         </CardContent>
-        <CardFooter>
-          <p
-            className={`text-sm font-medium ${
-              pet.available ? "text-green-600" : "text-red-600"
-            }`}
-          >
-            {pet.available ? "Available" : "Not Available"}
-          </p>
-        </CardFooter>
       </Card>
     </Link>
   );
