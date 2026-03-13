@@ -9,15 +9,15 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ApplyFiltersButton } from "./apply-filters-button";
-import { ClearFiltersButton } from "./clear-filters-button";
 import { capitalize } from "@/lib/utils";
 import {
-  ALL_SPECIES,
   ALL_SIZES,
+  ALL_SPECIES,
   AvailableFilter,
 } from "../../lib/use-pet-filters";
 import type { FiltersViewModel } from "../pet-filters";
+import { ApplyFiltersButton } from "./apply-filters-button";
+import { ClearFiltersButton } from "./clear-filters-button";
 
 interface MobileFiltersProps {
   uniqueSpecies: string[];
@@ -81,7 +81,6 @@ export function MobileFilters({
               <RadioGroup
                 value={selectedSpecies || ALL_SPECIES}
                 onValueChange={handleSpeciesChange}
-                className="space-y-2"
               >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value={ALL_SPECIES} id="mobile-species-all" />
