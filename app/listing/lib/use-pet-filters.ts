@@ -233,14 +233,8 @@ export function usePetFilters(): UsePetFiltersReturn {
       available: AvailableFilter.All,
     };
 
-    isOptimisticUpdateRef.current = true;
     updateLocalFilters(initial);
-
-    startTransition(() => {
-      router.push("/listing");
-      persistFiltersToStorage(initial);
-    });
-  }, [router, updateLocalFilters]);
+  }, [updateLocalFilters]);
 
   // Create toggle handlers
   const handleSpeciesToggle = useCallback(

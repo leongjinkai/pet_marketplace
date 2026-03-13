@@ -164,7 +164,9 @@ export function MobileFilters({
 
             <div className="flex items-center justify-between gap-2 pt-2 border-t">
               <Button
-                onClick={resetFilters}
+                onClick={() => {
+                  resetFilters();
+                }}
                 variant="outline"
                 className="cursor-pointer"
                 disabled={isApplyingFilters || !hasSelectedFilters}
