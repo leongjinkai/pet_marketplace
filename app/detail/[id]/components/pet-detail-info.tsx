@@ -9,8 +9,8 @@ export function PetDetailInfo({ pet }: PetDetailInfoProps) {
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-2xl font-bold mb-2">{pet.name}</h2>
-        <p className="text-muted-foreground capitalize">
+        <h2 className="text-4xl font-bold mb-2">{pet.name}</h2>
+        <p className="text-muted-foreground capitalize text-lg">
           {pet.species} • {pet.size} • {pet.age_months} months old
         </p>
       </div>

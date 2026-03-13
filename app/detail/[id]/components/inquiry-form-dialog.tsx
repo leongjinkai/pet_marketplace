@@ -53,6 +53,8 @@ export function InquiryFormDialog({
         <Button
           disabled={!pet.available}
           className={pet.available ? "cursor-pointer" : ""}
+          size="lg"
+          variant="outline"
         >
           Inquire
         </Button>

@@ -11,30 +11,26 @@ interface PetCardProps {
 export function PetCard({ pet }: PetCardProps) {
   return (
     <Link href={`/detail/${pet.id}`} className="block">
-      <Card className="cursor-pointer transition-transform hover:scale-105">
+      <Card className="cursor-pointer transition-transform hover:scale-105 hover:shadow-lg pt-0 border-b-2">
         <div className="relative w-full aspect-square bg-muted">
           <PetImage src={pet.image_url} alt={pet.name} />
         </div>
         <CardHeader>
-          <CardTitle>{pet.name}</CardTitle>
-          <div className="flex flex-wrap gap-2">
-            <Badge variant="secondary" className="capitalize">
-              {pet.species}
-            </Badge>
-            <Badge variant="secondary" className="capitalize">
-              {pet.size}
-            </Badge>
-            <Badge variant="secondary">{pet.age_months} months old</Badge>
-            <Badge
-              className={
-                pet.available
-                  ? "bg-green-600 text-white hover:bg-green-700"
-                  : "bg-red-600 text-white hover:bg-red-700"
-              }
-            >
-              {pet.available ? "Available" : "Not Available"}
-            </Badge>
+          <CardTitle className="font-bold text-3xl">{pet.name}</CardTitle>
+          <div className="flex flex-wrap gap-2 my-2 text-lg capitalize">
+            <p>{pet.species} • </p>
+            <p>{pet.size} • </p>
+            <p>{pet.age_months} months old</p>
           </div>
+          <Badge
+            className={
+              pet.available
+                ? "bg-green-600 text-white hover:bg-green-700"
+                : "bg-red-600 text-white hover:bg-red-700"
+            }
+          >
+            {pet.available ? "Available" : "Not Available"}
+          </Badge>
         </CardHeader>
         <CardContent>
           <p className="text-2xl font-bold">${pet.price}</p>

@@ -10,7 +10,7 @@ interface PetGridProps {
 export function PetGrid({ pets, isLoading = false }: PetGridProps) {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-w-[75%] mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-[75%] mx-auto">
         {Array.from({ length: 6 }).map((_, index) => (
           <PetCardSkeleton key={index} />
         ))}
@@ -19,7 +19,7 @@ export function PetGrid({ pets, isLoading = false }: PetGridProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-w-[75%] mx-auto">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-[75%] mx-auto">
       {pets.map((pet) => (
         <PetCard key={pet.id} pet={pet} />
       ))}
