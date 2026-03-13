@@ -1,0 +1,83 @@
+"use client";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { AvailableFilter } from "../../lib/use-pet-filters";
+
+interface AvailabilityFilterProps {
+  availableFilter: AvailableFilter;
+  handleAvailableChange: (value: AvailableFilter) => void;
+}
+
+export function AvailabilityFilter({
+  availableFilter,
+  handleAvailableChange,
+}: AvailabilityFilterProps) {
+  const [open, setOpen] = useState(false);
+  const hasActiveFilter = availableFilter !== AvailableFilter.All;
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button variant="outline" className="cursor-pointer">
+          Availability
+          {hasActiveFilter && (
+            <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+              1
+            </span>
+          )}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-64" align="start">
+        <RadioGroup
+          value={availableFilter as string}
+          onValueChange={(value) =>
+            handleAvailableChange(value as AvailableFilter)
+          }
+          className="space-y-2"
+        >
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value={AvailableFilter.All} id="availability-all" />
+            <Label
+              htmlFor="availability-all"
+              className="text-sm cursor-pointer"
+            >
+              All
+            </Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem
+              value={AvailableFilter.Available}
+              id="availability-available"
+            />
+            <Label
+              htmlFor="availability-available"
+              className="text-sm cursor-pointer"
+            >
+              Available
+            </Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem
+              value={AvailableFilter.NotAvailable}
+              id="availability-not-available"
+            />
+            <Label
+              htmlFor="availability-not-available"
+              className="text-sm cursor-pointer"
+            >
+              Not Available
+            </Label>
+          </div>
+        </RadioGroup>
+      </PopoverContent>
+    </Popover>
+  );
+}

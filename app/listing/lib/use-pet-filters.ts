@@ -10,7 +10,11 @@ import {
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export type AvailableFilter = "all" | "available" | "not-available";
+export enum AvailableFilter {
+  All = "all",
+  Available = "available",
+  NotAvailable = "not-available",
+}
 
 export interface UsePetFiltersReturn {
   selectedSpecies: string[];
@@ -20,6 +24,7 @@ export interface UsePetFiltersReturn {
   handleSpeciesToggle: (species: string) => void;
   handleSizeToggle: (size: string) => void;
   handleAvailableChange: (value: AvailableFilter) => void;
+  applyFilters: () => void;
 }
 
 export function usePetFilters(): UsePetFiltersReturn {
@@ -27,6 +32,11 @@ export function usePetFilters(): UsePetFiltersReturn {
   const searchParams = useSearchParams();
   const [, startTransition] = useTransition();
   const isOptimisticUpdateRef = useRef(false);
+  const prevUrlValuesRef = useRef<{
+    species: string[];
+    sizes: string[];
+    available: AvailableFilter;
+  }>({ species: [], sizes: [], available: AvailableFilter.All });
 
   // Derive current URL values
   const urlSpecies = useMemo(
@@ -37,97 +47,107 @@ export function usePetFilters(): UsePetFiltersReturn {
   const urlAvailable = useMemo(() => {
     const availableParam = searchParams.get("available");
     return availableParam === "true"
-      ? "available"
+      ? AvailableFilter.Available
       : availableParam === "false"
-        ? "not-available"
-        : "all";
+        ? AvailableFilter.NotAvailable
+        : AvailableFilter.All;
   }, [searchParams]);
 
-  // Optimistic state for immediate UI updates
-  const [optimisticSpecies, setOptimisticSpecies] =
-    useState<string[]>(urlSpecies);
-  const [optimisticSizes, setOptimisticSizes] = useState<string[]>(urlSizes);
-  const [optimisticAvailable, setOptimisticAvailable] =
+  // Local state for filters (doesn't immediately update URL)
+  const [localSpecies, setLocalSpecies] = useState<string[]>(urlSpecies);
+  const [localSizes, setLocalSizes] = useState<string[]>(urlSizes);
+  const [localAvailable, setLocalAvailable] =
     useState<AvailableFilter>(urlAvailable);
 
-  // Sync optimistic state with URL when URL changes externally
-  // Use a timeout to avoid setState in effect directly
+  // Sync local state with URL when URL changes externally (e.g., browser back/forward or after applying filters)
+  // Only sync when URL actually changes, not when local state changes
   useEffect(() => {
     if (isOptimisticUpdateRef.current) {
       isOptimisticUpdateRef.current = false;
+      // Update ref to current URL values after applying filters
+      prevUrlValuesRef.current = {
+        species: [...urlSpecies],
+        sizes: [...urlSizes],
+        available: urlAvailable,
+      };
       return;
     }
 
-    // Check if URL values differ from optimistic state
-    const speciesChanged =
-      urlSpecies.length !== optimisticSpecies.length ||
-      urlSpecies.some((s) => !optimisticSpecies.includes(s));
-    const sizesChanged =
-      urlSizes.length !== optimisticSizes.length ||
-      urlSizes.some((s) => !optimisticSizes.includes(s));
-    const availableChanged = urlAvailable !== optimisticAvailable;
+    // Compare current URL values with previous URL values (not local state)
+    const prev = prevUrlValuesRef.current;
+    const urlSpeciesStr = [...urlSpecies].sort().join(",");
+    const urlSizesStr = [...urlSizes].sort().join(",");
+    const prevSpeciesStr = [...prev.species].sort().join(",");
+    const prevSizesStr = [...prev.sizes].sort().join(",");
 
+    const speciesChanged = urlSpeciesStr !== prevSpeciesStr;
+    const sizesChanged = urlSizesStr !== prevSizesStr;
+    const availableChanged = urlAvailable !== prev.available;
+
+    // Only update local state if URL values actually changed
     if (speciesChanged || sizesChanged || availableChanged) {
-      // Use setTimeout to defer state update outside of effect execution
-      const timeoutId = setTimeout(() => {
-        setOptimisticSpecies(urlSpecies);
-        setOptimisticSizes(urlSizes);
-        setOptimisticAvailable(urlAvailable);
-      }, 0);
-      return () => clearTimeout(timeoutId);
+      // Use startTransition to defer state updates and avoid cascading renders
+      startTransition(() => {
+        setLocalSpecies(urlSpecies);
+        setLocalSizes(urlSizes);
+        setLocalAvailable(urlAvailable);
+      });
     }
-  }, [
-    urlSpecies,
-    urlSizes,
-    urlAvailable,
-    optimisticSpecies,
-    optimisticSizes,
-    optimisticAvailable,
-  ]);
 
-  // Use optimistic state for UI
-  const selectedSpecies = optimisticSpecies;
-  const selectedSizes = optimisticSizes;
-  const availableFilter = optimisticAvailable;
+    // Always update ref to track current URL values (for next comparison)
+    prevUrlValuesRef.current = {
+      species: [...urlSpecies],
+      sizes: [...urlSizes],
+      available: urlAvailable,
+    };
+  }, [urlSpecies, urlSizes, urlAvailable]);
 
-  const updateFilters = useCallback(
+  // Use local state for UI
+  const selectedSpecies = localSpecies;
+  const selectedSizes = localSizes;
+  const availableFilter = localAvailable;
+
+  // Apply filters to URL (called when filter button is clicked)
+  const applyFilters = useCallback(() => {
+    // Mark as optimistic update
+    isOptimisticUpdateRef.current = true;
+
+    // Navigate with transition
+    startTransition(() => {
+      const params = new URLSearchParams();
+
+      localSpecies.forEach((species) => {
+        params.append("species", species);
+      });
+
+      localSizes.forEach((size) => {
+        params.append("size", size);
+      });
+
+      if (localAvailable !== AvailableFilter.All) {
+        params.set(
+          "available",
+          localAvailable === AvailableFilter.Available ? "true" : "false"
+        );
+      }
+
+      const queryString = params.toString();
+      router.push(`/listing${queryString ? `?${queryString}` : ""}`);
+    });
+  }, [router, localSpecies, localSizes, localAvailable]);
+
+  // Update local state only (doesn't update URL)
+  const updateLocalFilters = useCallback(
     (
       newSpecies: string[],
       newSizes: string[],
       newAvailable: AvailableFilter
     ) => {
-      // Mark as optimistic update
-      isOptimisticUpdateRef.current = true;
-
-      // Update optimistic state immediately
-      setOptimisticSpecies(newSpecies);
-      setOptimisticSizes(newSizes);
-      setOptimisticAvailable(newAvailable);
-
-      // Navigate with transition
-      startTransition(() => {
-        const params = new URLSearchParams();
-
-        newSpecies.forEach((species) => {
-          params.append("species", species);
-        });
-
-        newSizes.forEach((size) => {
-          params.append("size", size);
-        });
-
-        if (newAvailable !== "all") {
-          params.set(
-            "available",
-            newAvailable === "available" ? "true" : "false"
-          );
-        }
-
-        const queryString = params.toString();
-        router.push(`/listing${queryString ? `?${queryString}` : ""}`);
-      });
+      setLocalSpecies(newSpecies);
+      setLocalSizes(newSizes);
+      setLocalAvailable(newAvailable);
     },
-    [router]
+    []
   );
 
   const handleSpeciesToggle = useCallback(
@@ -135,9 +155,9 @@ export function usePetFilters(): UsePetFiltersReturn {
       const newSpecies = selectedSpecies.includes(species)
         ? selectedSpecies.filter((s) => s !== species)
         : [...selectedSpecies, species];
-      updateFilters(newSpecies, selectedSizes, availableFilter);
+      updateLocalFilters(newSpecies, selectedSizes, availableFilter);
     },
-    [selectedSpecies, selectedSizes, availableFilter, updateFilters]
+    [selectedSpecies, selectedSizes, availableFilter, updateLocalFilters]
   );
 
   const handleSizeToggle = useCallback(
@@ -145,22 +165,23 @@ export function usePetFilters(): UsePetFiltersReturn {
       const newSizes = selectedSizes.includes(size)
         ? selectedSizes.filter((s) => s !== size)
         : [...selectedSizes, size];
-      updateFilters(selectedSpecies, newSizes, availableFilter);
+      updateLocalFilters(selectedSpecies, newSizes, availableFilter);
     },
-    [selectedSpecies, selectedSizes, availableFilter, updateFilters]
+    [selectedSpecies, selectedSizes, availableFilter, updateLocalFilters]
   );
 
   const handleAvailableChange = useCallback(
     (value: AvailableFilter) => {
-      updateFilters(selectedSpecies, selectedSizes, value);
+      updateLocalFilters(selectedSpecies, selectedSizes, value);
     },
-    [selectedSpecies, selectedSizes, updateFilters]
+    [selectedSpecies, selectedSizes, updateLocalFilters]
   );
 
+  // Count active filters based on URL params (applied filters)
   const activeFilterCount =
-    selectedSpecies.length +
-    selectedSizes.length +
-    (availableFilter !== "all" ? 1 : 0);
+    urlSpecies.length +
+    urlSizes.length +
+    (urlAvailable !== AvailableFilter.All ? 1 : 0);
 
   return {
     selectedSpecies,
@@ -170,5 +191,6 @@ export function usePetFilters(): UsePetFiltersReturn {
     handleSpeciesToggle,
     handleSizeToggle,
     handleAvailableChange,
+    applyFilters,
   };
 }
