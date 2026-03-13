@@ -9,6 +9,7 @@ import {
   useState,
   useTransition,
 } from "react";
+import { useListingUi } from "@/app/listing/provider/listing-ui-context";
 import { PetFilterCategory, TrueFalse } from "@/types/listing-types";
 
 export enum AvailableFilter {
@@ -183,8 +184,8 @@ function toggleArrayValue<T>(array: T[], value: T): T[] {
 export function usePetFilters(): UsePetFiltersReturn {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [isPending, startTransition] = useTransition();
   const isOptimisticUpdateRef = useRef(false);
+  const { isApplyingFilters, startFiltersTransition } = useListingUi();
 
   // Extract URL filters
   const { urlSpecies, urlSizes, urlAvailable } = useUrlFilters(searchParams);
@@ -218,13 +219,19 @@ export function usePetFilters(): UsePetFiltersReturn {
       available: localAvailable,
     };
 
-    startTransition(() => {
+    startFiltersTransition(() => {
       const params = buildFilterParams(currentFilters);
       const queryString = params.toString();
       router.push(`/listing${queryString ? `?${queryString}` : ""}`);
       persistFiltersToStorage(currentFilters);
     });
-  }, [router, localSpecies, localSizes, localAvailable]);
+  }, [
+    router,
+    localSpecies,
+    localSizes,
+    localAvailable,
+    startFiltersTransition,
+  ]);
 
   const resetFilters = useCallback(() => {
     const initial: FilterState = {
@@ -285,7 +292,7 @@ export function usePetFilters(): UsePetFiltersReturn {
     selectedSizes: localSizes,
     availableFilter: localAvailable,
     activeFilterCount,
-    isApplyingFilters: isPending,
+    isApplyingFilters,
     hasSelectedFilters,
     handleSpeciesToggle,
     handleSizeToggle,

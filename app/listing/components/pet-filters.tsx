@@ -1,9 +1,9 @@
 "use client";
 
-import { usePetFilters } from "../lib/use-pet-filters";
-import { MobileFilters } from "./filters/mobile-filters";
-import { DesktopFilters } from "./filters/desktop-filters";
 import type { AvailableFilter } from "../lib/use-pet-filters";
+import { usePetFilters } from "../lib/use-pet-filters";
+import { DesktopFilters } from "./filters/desktop-filters";
+import { MobileFilters } from "./filters/mobile-filters";
 
 interface PetFiltersProps {
   uniqueSpecies: string[];

@@ -7,6 +7,7 @@ import {
   parseFiltersFromSearchParams,
   validateSearchParams,
 } from "@/app/listing/lib/filters";
+import { ListingUiProvider } from "@/app/listing/provider/listing-ui-context";
 import { PetSize, PetSpecies } from "@/types/listing-types";
 
 interface ListingPageProps {
@@ -28,16 +29,21 @@ export default async function ListingPage({ searchParams }: ListingPageProps) {
   const uniqueSizes = Object.values(PetSize);
 
   return (
-    <div>
-      <div className="sticky top-0 z-30 bg-background/90 backdrop-blur-md border-b md:static md:bg-transparent md:backdrop-blur-none md:border-none md:mb-8">
-        <div className="max-w-[90%] mx-auto py-4">
-          <h1 className="text-5xl font-bold mb-4">Pet Listings</h1>
-          <PetFilters uniqueSpecies={uniqueSpecies} uniqueSizes={uniqueSizes} />
+    <ListingUiProvider>
+      <div>
+        <div className="sticky top-0 z-30 bg-background/90 backdrop-blur-md border-b md:static md:bg-transparent md:backdrop-blur-none md:border-none md:mb-8">
+          <div className="max-w-[90%] mx-auto py-4">
+            <h1 className="text-5xl font-bold mb-4">Pet Listings</h1>
+            <PetFilters
+              uniqueSpecies={uniqueSpecies}
+              uniqueSizes={uniqueSizes}
+            />
+          </div>
         </div>
+        <Suspense fallback={<PetGrid pets={[]} isLoading={true} />}>
+          <PetsList filters={hasActiveFilters ? filters : undefined} />
+        </Suspense>
       </div>
-      <Suspense fallback={<PetGrid pets={[]} isLoading={true} />}>
-        <PetsList filters={hasActiveFilters ? filters : undefined} />
-      </Suspense>
-    </div>
+    </ListingUiProvider>
   );
 }

@@ -1,16 +1,29 @@
-import type { Pet } from "@/types/listing-types";
+"use client";
+
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import type { MouseEvent } from "react";
+import { useListingUi } from "@/app/listing/provider/listing-ui-context";
 import { PetImage } from "@/components/common/pet-image";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { Pet } from "@/types/listing-types";
 
 interface PetCardProps {
   pet: Pet;
 }
 
 export function PetCard({ pet }: PetCardProps) {
+  const { isApplyingFilters } = useListingUi();
+
+  const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (isApplyingFilters) {
+      event.preventDefault();
+      return;
+    }
+  };
+
   return (
-    <Link href={`/detail/${pet.id}`} className="block">
+    <Link href={`/detail/${pet.id}`} className="block" onClick={handleClick}>
       <Card className="cursor-pointer transition-transform hover:scale-105 hover:shadow-lg pt-0 border-b-2">
         <div className="relative w-full aspect-square bg-muted">
           <PetImage
