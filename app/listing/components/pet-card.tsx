@@ -1,5 +1,4 @@
 import { Pet } from "@/types/listing-types";
-import Image from "next/image";
 import Link from "next/link";
 import {
   Card,
@@ -9,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { PetImage } from "./pet-image";
 
 interface PetCardProps {
   pet: Pet;
@@ -18,13 +18,8 @@ export function PetCard({ pet }: PetCardProps) {
   return (
     <Link href={`/detail/${pet.id}`} className="block">
       <Card className="cursor-pointer transition-transform hover:scale-105">
-        <div className="relative w-full aspect-square">
-          <Image
-            src={pet.image_url}
-            alt={pet.name}
-            fill
-            className="object-cover"
-          />
+        <div className="relative w-full aspect-square bg-muted">
+          <PetImage src={pet.image_url} alt={pet.name} />
         </div>
         <CardHeader>
           <CardTitle>{pet.name}</CardTitle>

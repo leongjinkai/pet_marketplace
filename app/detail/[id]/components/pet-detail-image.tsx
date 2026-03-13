@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { Pet } from "@/types/listing-types";
+import { PetImage } from "@/app/listing/components/pet-image";
 
 interface PetDetailImageProps {
   pet: Pet;
@@ -7,12 +7,13 @@ interface PetDetailImageProps {
 
 export function PetDetailImage({ pet }: PetDetailImageProps) {
   return (
-    <div className="relative w-full aspect-square">
-      <Image
+    <div className="relative w-full aspect-square bg-muted rounded-lg">
+      <PetImage
         src={pet.image_url}
         alt={pet.name}
-        fill
-        className="object-cover rounded-lg"
+        className="rounded-lg"
+        priority
+        rounded
       />
     </div>
   );

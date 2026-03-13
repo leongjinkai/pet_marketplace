@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,6 +12,7 @@ import {
 import { Pet } from "@/types/listing-types";
 import { type InquiryResponse } from "@/lib/api/submit-inquiry";
 import { formatDate } from "../lib/utils";
+import { PetImage } from "@/app/listing/components/pet-image";
 
 interface InquirySuccessDialogProps {
   open: boolean;
@@ -39,12 +39,12 @@ export function InquirySuccessDialog({
         {successData && (
           <div className="space-y-4">
             <div className="flex items-center gap-4">
-              <div className="relative w-20 h-20 rounded-lg overflow-hidden shrink-0">
-                <Image
+              <div className="relative w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-muted">
+                <PetImage
                   src={successData.imageUrl}
                   alt={successData.petName}
-                  fill
-                  className="object-cover"
+                  className="rounded-lg"
+                  rounded
                 />
               </div>
               <div className="flex-1">
