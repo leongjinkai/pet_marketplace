@@ -7,6 +7,7 @@ import {
 import { PetSpecies, PetSize } from "@/types/listing-types";
 import { PetFilters } from "@/app/listing/components/pet-filters";
 import { PetGrid } from "@/app/listing/components/pet-grid";
+import { NoResults } from "@/app/listing/components/no-results";
 
 interface ListingPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -21,10 +22,9 @@ export default async function ListingPage({ searchParams }: ListingPageProps) {
   }
 
   const filters = parseFiltersFromSearchParams(resolvedSearchParams);
+  const hasActiveFilters = Object.keys(filters).length > 0;
 
-  const pets = await fetchPets(
-    Object.keys(filters).length > 0 ? filters : undefined
-  );
+  const pets = await fetchPets(hasActiveFilters ? filters : undefined);
 
   const uniqueSpecies = Object.values(PetSpecies);
   const uniqueSizes = Object.values(PetSize);
@@ -37,7 +37,11 @@ export default async function ListingPage({ searchParams }: ListingPageProps) {
           <PetFilters uniqueSpecies={uniqueSpecies} uniqueSizes={uniqueSizes} />
         </div>
       </div>
-      <PetGrid pets={pets} />
+      {pets.length === 0 && hasActiveFilters ? (
+        <NoResults />
+      ) : (
+        <PetGrid pets={pets} />
+      )}
     </div>
   );
 }

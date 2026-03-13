@@ -77,7 +77,7 @@ export function PetFilters({ uniqueSpecies, uniqueSizes }: PetFiltersProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" className="cursor-pointer">
           Filters
           {activeFilterCount > 0 && (
             <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
