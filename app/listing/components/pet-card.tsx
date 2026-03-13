@@ -9,17 +9,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { createPetHash } from "../lib/hash";
 
 interface PetCardProps {
   pet: Pet;
 }
 
 export function PetCard({ pet }: PetCardProps) {
-  const hash = createPetHash(pet);
-
   return (
-    <Link href={`/detail/${hash}`} className="block">
+    <Link href={`/detail/${pet.id}`} className="block">
       <Card className="cursor-pointer transition-transform hover:scale-105">
         <div className="relative w-full aspect-square">
           <Image

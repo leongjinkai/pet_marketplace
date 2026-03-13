@@ -82,6 +82,5 @@ npm start
 ## Assumptions Made
 
 1. Options for the filters are called and received separately from another endpoint. (Currently the types in listing-types are assumed to be all the size, species and availability options)
-2. Since I am routing to a dedicated webpage for each pet detail and there is no unique pet_listing_id for me to set as the route parameter, I will assume the hash I have created from the pet details will be its unique identifier
 
 ## Key Tradeoffs/Possible Further improvements

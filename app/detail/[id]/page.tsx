@@ -1,18 +1,17 @@
 import { notFound } from "next/navigation";
 import { fetchPets } from "@/lib/api/fetch-pets";
-import { createPetHash } from "@/app/listing/lib/hash";
 import { PetDetail } from "./components/pet-detail";
 
 interface DetailPageProps {
-  params: Promise<{ hash: string }>;
+  params: Promise<{ id: string }>;
 }
 
 export default async function DetailPage({ params }: DetailPageProps) {
-  const { hash } = await params;
+  const { id } = await params;
 
-  // Fetch all pets to find the one matching the hash
+  // Fetch all pets to find the one matching the id
   const pets = await fetchPets();
-  const pet = pets.find((p) => createPetHash(p) === hash);
+  const pet = pets.find((p) => p.id === id);
 
   if (!pet) {
     notFound();
