@@ -2,17 +2,17 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
-import type { FiltersViewModel } from "../pet-filters";
 import { AvailableFilter } from "../../lib/use-pet-filters";
+import type { FiltersViewModel } from "../pet-filters";
 
 interface MobileFiltersProps {
   uniqueSpecies: string[];
@@ -58,7 +58,7 @@ export function MobileFilters({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-80" align="start">
+        <PopoverContent className="w-60" align="start">
           <div className="space-y-4">
             <div>
               <h3 className="mb-2 text-sm font-semibold">Species</h3>
@@ -66,9 +66,8 @@ export function MobileFilters({
                 {uniqueSpecies.map((species) => {
                   const id = `mobile-species-${species}`;
                   return (
-                    <label
+                    <div
                       key={species}
-                      htmlFor={id}
                       className="flex items-center space-x-2 cursor-pointer"
                     >
                       <Checkbox
@@ -76,8 +75,13 @@ export function MobileFilters({
                         checked={selectedSpecies.includes(species)}
                         onCheckedChange={() => handleSpeciesToggle(species)}
                       />
-                      <span className="text-sm capitalize">{species}</span>
-                    </label>
+                      <Label
+                        htmlFor={id}
+                        className="text-sm capitalize cursor-pointer"
+                      >
+                        {species}
+                      </Label>
+                    </div>
                   );
                 })}
               </div>
@@ -89,9 +93,8 @@ export function MobileFilters({
                 {uniqueSizes.map((size) => {
                   const id = `mobile-size-${size}`;
                   return (
-                    <label
+                    <div
                       key={size}
-                      htmlFor={id}
                       className="flex items-center space-x-2 cursor-pointer"
                     >
                       <Checkbox
@@ -99,8 +102,13 @@ export function MobileFilters({
                         checked={selectedSizes.includes(size)}
                         onCheckedChange={() => handleSizeToggle(size)}
                       />
-                      <span className="text-sm capitalize">{size}</span>
-                    </label>
+                      <Label
+                        htmlFor={id}
+                        className="text-sm capitalize cursor-pointer"
+                      >
+                        {size}
+                      </Label>
+                    </div>
                   );
                 })}
               </div>

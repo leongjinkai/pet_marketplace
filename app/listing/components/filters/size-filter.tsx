@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
@@ -35,21 +36,29 @@ export function SizeFilter({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-64" align="start">
+      <PopoverContent className="w-fit" align="start">
         <div className="space-y-2">
-          {uniqueSizes.map((size) => (
-            <label
-              key={size}
-              htmlFor={size}
-              className="flex items-center space-x-2 cursor-pointer"
-            >
-              <Checkbox
-                checked={selectedSizes.includes(size)}
-                onCheckedChange={() => handleSizeToggle(size)}
-              />
-              <span className="text-sm capitalize">{size}</span>
-            </label>
-          ))}
+          {uniqueSizes.map((size) => {
+            const id = `desktop-size-${size}`;
+            return (
+              <div
+                key={size}
+                className="flex items-center space-x-2 cursor-pointer"
+              >
+                <Checkbox
+                  id={id}
+                  checked={selectedSizes.includes(size)}
+                  onCheckedChange={() => handleSizeToggle(size)}
+                />
+                <Label
+                  htmlFor={id}
+                  className="text-sm capitalize cursor-pointer"
+                >
+                  {size}
+                </Label>
+              </div>
+            );
+          })}
         </div>
       </PopoverContent>
     </Popover>

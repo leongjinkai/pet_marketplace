@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
@@ -35,21 +36,29 @@ export function SpeciesFilter({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-64" align="start">
+      <PopoverContent className="w-fit" align="start">
         <div className="space-y-2">
-          {uniqueSpecies.map((species) => (
-            <label
-              key={species}
-              htmlFor={species}
-              className="flex items-center space-x-2 cursor-pointer"
-            >
-              <Checkbox
-                checked={selectedSpecies.includes(species)}
-                onCheckedChange={() => handleSpeciesToggle(species)}
-              />
-              <span className="text-sm capitalize">{species}</span>
-            </label>
-          ))}
+          {uniqueSpecies.map((species) => {
+            const id = `desktop-species-${species}`;
+            return (
+              <div
+                key={species}
+                className="flex items-center space-x-2 cursor-pointer"
+              >
+                <Checkbox
+                  id={id}
+                  checked={selectedSpecies.includes(species)}
+                  onCheckedChange={() => handleSpeciesToggle(species)}
+                />
+                <Label
+                  htmlFor={id}
+                  className="text-sm capitalize cursor-pointer"
+                >
+                  {species}
+                </Label>
+              </div>
+            );
+          })}
         </div>
       </PopoverContent>
     </Popover>

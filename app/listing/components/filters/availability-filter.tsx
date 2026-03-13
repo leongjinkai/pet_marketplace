@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 import { AvailableFilter } from "../../lib/use-pet-filters";
 
 interface AvailabilityFilterProps {
@@ -35,7 +35,7 @@ export function AvailabilityFilter({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-64" align="start">
+      <PopoverContent className="w-fit" align="start">
         <RadioGroup
           value={availableFilter as string}
           onValueChange={(value) =>
