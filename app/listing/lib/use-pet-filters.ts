@@ -160,8 +160,8 @@ function buildFilterParams(filters: FilterState): URLSearchParams {
 function persistFiltersToStorage(filters: FilterState): void {
   try {
     window.localStorage.setItem("listingFilters", JSON.stringify(filters));
-  } catch {
-    // Ignore storage errors (e.g., disabled storage)
+  } catch (error) {
+    console.error("Error persisting filters to localStorage", error);
   }
 }
 

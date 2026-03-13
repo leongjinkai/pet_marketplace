@@ -1,8 +1,8 @@
 "use client";
 
+import { ArrowLeftIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon } from "lucide-react";
 import { PetFilterCategory, TrueFalse } from "@/types/listing-types";
 
 export function BackButton() {
@@ -38,11 +38,10 @@ export function BackButton() {
         router.push(`/listing${queryString ? `?${queryString}` : ""}`);
         return;
       }
-    } catch {
-      // Ignore storage / parsing errors and fall through to default behavior
+    } catch (error) {
+      console.error("Error restoring filters from localStorage", error);
     }
 
-    // If no stored filters, go to listing without filters
     router.push("/listing");
   };
 
