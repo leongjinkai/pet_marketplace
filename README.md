@@ -143,14 +143,14 @@ npm start
 
 ## Key Tradeoffs/Possible Further improvements
 
-1. Standardised Logging instead of just using console logs (Use Sentry or Pino)
-2. Currently the pet listings can be rendered in one go due to the small number of listings - if listings were to exponentially increase, should implment either of below
+1. Use of state management library such as Zustand or RTK if as there are more features added
+2. Standardised Logging instead of just using console logs (Use Sentry or Pino)
+3. Currently the pet listings can be rendered in one go due to the small number of listings - if listings were to exponentially increase, should implment either of below
    1. Load more button
    2. Infinite scrolling + Lazy Loading
    3. Pagination
-3. SEO/SEM optimisation if this is meant to be an external facing website to improve web visibility
-4. Design and Animation - For better user experience
-5. Internationalisation - Support multiple languages if website is meant to be global
-6. Testing - Should have component testing (Jest) and integrated testing (playwright) to ensure components work and show as expected
-7. Type alignment with backend through a common data contract (Using Zod schema) to prevent regressions if there's any change
-8. As the
+4. SEO/SEM optimisation if this is meant to be an external facing website to improve web visibility
+5. Design and Animation - For better user experience
+6. Internationalisation - Support multiple languages if website is meant to be global
+7. Testing - Should have component testing (Jest) and integrated testing (playwright) to ensure components work and show as expected
+8. Type alignment with backend through a common data contract (Using Zod schema) to prevent regressions if there's any change
