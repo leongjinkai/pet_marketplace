@@ -43,6 +43,12 @@ export function PetFilters({ uniqueSpecies, uniqueSizes }: PetFiltersProps) {
 
   return (
     <>
+      {filters.isApplyingFilters && (
+        <div
+          className="fixed inset-0 z-20 bg-background/40 pointer-events-auto"
+          aria-hidden="true"
+        />
+      )}
       <MobileFilters
         uniqueSpecies={uniqueSpecies}
         uniqueSizes={uniqueSizes}
