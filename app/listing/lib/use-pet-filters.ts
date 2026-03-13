@@ -139,6 +139,18 @@ export function usePetFilters(): UsePetFiltersReturn {
 
       const queryString = params.toString();
       router.push(`/listing${queryString ? `?${queryString}` : ""}`);
+
+      // Persist current filters to localStorage so they can be restored later
+      try {
+        const stored = {
+          species: localSpecies,
+          sizes: localSizes,
+          available: localAvailable,
+        };
+        window.localStorage.setItem("listingFilters", JSON.stringify(stored));
+      } catch {
+        // Ignore storage errors (e.g., disabled storage)
+      }
     });
   }, [router, localSpecies, localSizes, localAvailable]);
 
