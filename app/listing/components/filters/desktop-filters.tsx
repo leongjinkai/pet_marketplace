@@ -5,37 +5,31 @@ import { Spinner } from "@/components/ui/spinner";
 import { SpeciesFilter } from "./species-filter";
 import { SizeFilter } from "./size-filter";
 import { AvailabilityFilter } from "./availability-filter";
-import type { AvailableFilter } from "../../lib/use-pet-filters";
+import type { FiltersViewModel } from "../pet-filters";
 
 interface DesktopFiltersProps {
   uniqueSpecies: string[];
   uniqueSizes: string[];
-  selectedSpecies: string[];
-  selectedSizes: string[];
-  availableFilter: AvailableFilter;
-  isApplyingFilters: boolean;
-  hasSelectedFilters: boolean;
-  handleSpeciesToggle: (species: string) => void;
-  handleSizeToggle: (size: string) => void;
-  handleAvailableChange: (value: AvailableFilter) => void;
-  applyFilters: () => void;
-  resetFilters: () => void;
+  model: FiltersViewModel;
 }
 
 export function DesktopFilters({
   uniqueSpecies,
   uniqueSizes,
-  selectedSpecies,
-  selectedSizes,
-  availableFilter,
-  isApplyingFilters,
-  hasSelectedFilters,
-  handleSpeciesToggle,
-  handleSizeToggle,
-  handleAvailableChange,
-  applyFilters,
-  resetFilters,
+  model,
 }: DesktopFiltersProps) {
+  const {
+    selectedSpecies,
+    selectedSizes,
+    availableFilter,
+    isApplyingFilters,
+    hasSelectedFilters,
+    handleSpeciesToggle,
+    handleSizeToggle,
+    handleAvailableChange,
+    applyFilters,
+    resetFilters,
+  } = model;
   return (
     <div className="hidden md:flex md:items-center md:gap-2">
       <SpeciesFilter

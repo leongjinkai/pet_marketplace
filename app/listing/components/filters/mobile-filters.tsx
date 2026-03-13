@@ -10,40 +10,34 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { AvailableFilter } from "../../lib/use-pet-filters";
 import { Spinner } from "@/components/ui/spinner";
+import type { FiltersViewModel } from "../pet-filters";
+import { AvailableFilter } from "../../lib/use-pet-filters";
 
 interface MobileFiltersProps {
   uniqueSpecies: string[];
   uniqueSizes: string[];
-  selectedSpecies: string[];
-  selectedSizes: string[];
-  availableFilter: AvailableFilter;
-  activeFilterCount: number;
-  isApplyingFilters: boolean;
-  hasSelectedFilters: boolean;
-  handleSpeciesToggle: (species: string) => void;
-  handleSizeToggle: (size: string) => void;
-  handleAvailableChange: (value: AvailableFilter) => void;
-  applyFilters: () => void;
-  resetFilters: () => void;
+  model: FiltersViewModel;
 }
 
 export function MobileFilters({
   uniqueSpecies,
   uniqueSizes,
-  selectedSpecies,
-  selectedSizes,
-  availableFilter,
-  activeFilterCount,
-  isApplyingFilters,
-  hasSelectedFilters,
-  handleSpeciesToggle,
-  handleSizeToggle,
-  handleAvailableChange,
-  applyFilters,
-  resetFilters,
+  model,
 }: MobileFiltersProps) {
+  const {
+    selectedSpecies,
+    selectedSizes,
+    availableFilter,
+    activeFilterCount,
+    isApplyingFilters,
+    hasSelectedFilters,
+    handleSpeciesToggle,
+    handleSizeToggle,
+    handleAvailableChange,
+    applyFilters,
+    resetFilters,
+  } = model;
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleApplyFilters = () => {

@@ -1,4 +1,5 @@
-import { Pet, PetFilterCategory } from "@/types/listing-types";
+import type { Pet } from "@/types/listing-types";
+import { PetFilterCategory } from "@/types/listing-types";
 
 const API_BASE_URL = process.env.BACKEND_URL;
 

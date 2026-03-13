@@ -1,15 +1,14 @@
 "use client";
 
+import { useRouter, useSearchParams } from "next/navigation";
 import {
-  useState,
-  useTransition,
-  useRef,
-  useMemo,
   useCallback,
   useEffect,
-  type MutableRefObject,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
 } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import { PetFilterCategory, TrueFalse } from "@/types/listing-types";
 
 export enum AvailableFilter {
@@ -88,7 +87,7 @@ function useLocalFilterState(initialState: FilterState) {
 function useFilterSync(
   urlFilters: FilterState,
   updateLocalFilters: (state: FilterState) => void,
-  isOptimisticUpdateRef: MutableRefObject<boolean>
+  isOptimisticUpdateRef: { current: boolean }
 ) {
   const [, startTransition] = useTransition();
   const prevUrlValuesRef = useRef<FilterState>({

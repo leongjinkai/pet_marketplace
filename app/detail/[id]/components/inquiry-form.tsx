@@ -1,10 +1,10 @@
 "use client";
 
-import { Pet } from "@/types/listing-types";
+import type { Pet } from "@/types/listing-types";
 import { useInquiryForm } from "../lib/use-inquiry-form";
+import { InquiryErrorDialog } from "./inquiry-error-dialog";
 import { InquiryFormDialog } from "./inquiry-form-dialog";
 import { InquirySuccessDialog } from "./inquiry-success-dialog";
-import { InquiryErrorDialog } from "./inquiry-error-dialog";
 
 interface InquiryFormProps {
   pet: Pet;

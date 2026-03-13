@@ -1,8 +1,8 @@
-import { FetchPetsFilters } from "@/lib/api/fetch-pets";
+import type { FetchPetsFilters } from "@/lib/api/fetch-pets";
 import {
-  PetSpecies,
-  PetSize,
   PetFilterCategory,
+  PetSize,
+  PetSpecies,
   TrueFalse,
 } from "@/types/listing-types";
 

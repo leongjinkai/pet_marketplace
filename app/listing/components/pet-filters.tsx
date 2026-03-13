@@ -3,57 +3,55 @@
 import { usePetFilters } from "../lib/use-pet-filters";
 import { MobileFilters } from "./filters/mobile-filters";
 import { DesktopFilters } from "./filters/desktop-filters";
+import type { AvailableFilter } from "../lib/use-pet-filters";
 
 interface PetFiltersProps {
   uniqueSpecies: string[];
   uniqueSizes: string[];
 }
 
+export type FiltersViewModel = {
+  selectedSpecies: string[];
+  selectedSizes: string[];
+  availableFilter: AvailableFilter;
+  activeFilterCount: number;
+  isApplyingFilters: boolean;
+  hasSelectedFilters: boolean;
+  handleSpeciesToggle: (species: string) => void;
+  handleSizeToggle: (size: string) => void;
+  handleAvailableChange: (value: AvailableFilter) => void;
+  applyFilters: () => void;
+  resetFilters: () => void;
+};
+
 export function PetFilters({ uniqueSpecies, uniqueSizes }: PetFiltersProps) {
-  const {
-    selectedSpecies,
-    selectedSizes,
-    availableFilter,
-    activeFilterCount,
-    isApplyingFilters,
-    hasSelectedFilters,
-    handleSpeciesToggle,
-    handleSizeToggle,
-    handleAvailableChange,
-    applyFilters,
-    resetFilters,
-  } = usePetFilters();
+  const filters = usePetFilters();
+
+  const model: FiltersViewModel = {
+    selectedSpecies: filters.selectedSpecies,
+    selectedSizes: filters.selectedSizes,
+    availableFilter: filters.availableFilter,
+    activeFilterCount: filters.activeFilterCount,
+    isApplyingFilters: filters.isApplyingFilters,
+    hasSelectedFilters: filters.hasSelectedFilters,
+    handleSpeciesToggle: filters.handleSpeciesToggle,
+    handleSizeToggle: filters.handleSizeToggle,
+    handleAvailableChange: filters.handleAvailableChange,
+    applyFilters: filters.applyFilters,
+    resetFilters: filters.resetFilters,
+  };
 
   return (
     <>
       <MobileFilters
         uniqueSpecies={uniqueSpecies}
         uniqueSizes={uniqueSizes}
-        selectedSpecies={selectedSpecies}
-        selectedSizes={selectedSizes}
-        availableFilter={availableFilter}
-        activeFilterCount={activeFilterCount}
-        isApplyingFilters={isApplyingFilters}
-        hasSelectedFilters={hasSelectedFilters}
-        handleSpeciesToggle={handleSpeciesToggle}
-        handleSizeToggle={handleSizeToggle}
-        handleAvailableChange={handleAvailableChange}
-        applyFilters={applyFilters}
-        resetFilters={resetFilters}
+        model={model}
       />
       <DesktopFilters
         uniqueSpecies={uniqueSpecies}
         uniqueSizes={uniqueSizes}
-        selectedSpecies={selectedSpecies}
-        selectedSizes={selectedSizes}
-        availableFilter={availableFilter}
-        isApplyingFilters={isApplyingFilters}
-        hasSelectedFilters={hasSelectedFilters}
-        handleSpeciesToggle={handleSpeciesToggle}
-        handleSizeToggle={handleSizeToggle}
-        handleAvailableChange={handleAvailableChange}
-        applyFilters={applyFilters}
-        resetFilters={resetFilters}
+        model={model}
       />
     </>
   );

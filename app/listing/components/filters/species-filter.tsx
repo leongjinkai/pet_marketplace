@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Checkbox } from "@/components/ui/checkbox";
 
 interface SpeciesFilterProps {
   uniqueSpecies: string[];
@@ -40,6 +40,7 @@ export function SpeciesFilter({
           {uniqueSpecies.map((species) => (
             <label
               key={species}
+              htmlFor={species}
               className="flex items-center space-x-2 cursor-pointer"
             >
               <Checkbox

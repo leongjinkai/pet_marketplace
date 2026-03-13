@@ -1,4 +1,4 @@
-import { Pet } from "@/types/listing-types";
+import type { Pet } from "@/types/listing-types";
 import { InquiryForm } from "./inquiry-form";
 
 interface PetDetailInfoProps {

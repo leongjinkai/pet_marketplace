@@ -1,16 +1,13 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
 
 export function PetDetailSkeleton() {
   return (
     <div className="bg-card rounded-lg border p-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Image skeleton */}
         <div className="relative w-full aspect-square">
           <Skeleton className="w-full h-full rounded-lg" />
         </div>
 
-        {/* Info skeleton */}
         <div className="space-y-4">
           <div>
             <Skeleton className="h-8 w-48 mb-2" />
