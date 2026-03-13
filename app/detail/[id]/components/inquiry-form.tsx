@@ -4,6 +4,7 @@ import { Pet } from "@/types/listing-types";
 import { useInquiryForm } from "../lib/use-inquiry-form";
 import { InquiryFormDialog } from "./inquiry-form-dialog";
 import { InquirySuccessDialog } from "./inquiry-success-dialog";
+import { InquiryErrorDialog } from "./inquiry-error-dialog";
 
 interface InquiryFormProps {
   pet: Pet;
@@ -17,6 +18,9 @@ export function InquiryForm({ pet }: InquiryFormProps) {
     successData,
     showSuccessDialog,
     setShowSuccessDialog,
+    errorMessage,
+    showErrorDialog,
+    setShowErrorDialog,
     formData,
     errors,
     handleChange,
@@ -41,6 +45,12 @@ export function InquiryForm({ pet }: InquiryFormProps) {
         onOpenChange={setShowSuccessDialog}
         successData={successData}
         pet={pet}
+      />
+
+      <InquiryErrorDialog
+        open={showErrorDialog}
+        onOpenChange={setShowErrorDialog}
+        message={errorMessage}
       />
     </>
   );

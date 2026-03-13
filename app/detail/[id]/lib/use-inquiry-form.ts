@@ -19,6 +19,9 @@ export interface UseInquiryFormReturn {
   successData: InquiryResponse | null;
   showSuccessDialog: boolean;
   setShowSuccessDialog: (show: boolean) => void;
+  errorMessage: string | null;
+  showErrorDialog: boolean;
+  setShowErrorDialog: (show: boolean) => void;
   formData: InquiryFormData;
   errors: ValidationErrors;
   handleChange: (
@@ -32,6 +35,8 @@ export function useInquiryForm(pet: Pet): UseInquiryFormReturn {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successData, setSuccessData] = useState<InquiryResponse | null>(null);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showErrorDialog, setShowErrorDialog] = useState(false);
   const [formData, setFormData] = useState<InquiryFormData>({
     petId: pet.id,
     fullName: "",
@@ -73,12 +78,13 @@ export function useInquiryForm(pet: Pet): UseInquiryFormReturn {
       setShowSuccessDialog(true);
     } catch (error) {
       console.error("Error submitting inquiry:", error);
-      // Show error message to user
-      const errorMessage =
+      // Show error message to user via dialog
+      const message =
         error instanceof Error
           ? error.message
           : "Failed to submit inquiry. Please try again.";
-      alert(errorMessage);
+      setErrorMessage(message);
+      setShowErrorDialog(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -91,6 +97,9 @@ export function useInquiryForm(pet: Pet): UseInquiryFormReturn {
     successData,
     showSuccessDialog,
     setShowSuccessDialog,
+    errorMessage,
+    showErrorDialog,
+    setShowErrorDialog,
     formData,
     errors,
     handleChange,

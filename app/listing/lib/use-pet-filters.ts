@@ -7,6 +7,7 @@ import {
   useMemo,
   useCallback,
   useEffect,
+  type MutableRefObject,
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PetFilterCategory, TrueFalse } from "@/types/listing-types";
@@ -28,18 +29,14 @@ export interface UsePetFiltersReturn {
   applyFilters: () => void;
 }
 
-export function usePetFilters(): UsePetFiltersReturn {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [, startTransition] = useTransition();
-  const isOptimisticUpdateRef = useRef(false);
-  const prevUrlValuesRef = useRef<{
-    species: string[];
-    sizes: string[];
-    available: AvailableFilter;
-  }>({ species: [], sizes: [], available: AvailableFilter.All });
+interface FilterState {
+  species: string[];
+  sizes: string[];
+  available: AvailableFilter;
+}
 
-  // Derive current URL values
+// Extract URL filter values from search params
+function useUrlFilters(searchParams: URLSearchParams) {
   const urlSpecies = useMemo(
     () => searchParams.getAll(PetFilterCategory.SPECIES),
     [searchParams]
@@ -57,154 +54,219 @@ export function usePetFilters(): UsePetFiltersReturn {
         : AvailableFilter.All;
   }, [searchParams]);
 
-  // Local state for filters (doesn't immediately update URL)
-  const [localSpecies, setLocalSpecies] = useState<string[]>(urlSpecies);
-  const [localSizes, setLocalSizes] = useState<string[]>(urlSizes);
-  const [localAvailable, setLocalAvailable] =
-    useState<AvailableFilter>(urlAvailable);
+  return { urlSpecies, urlSizes, urlAvailable };
+}
 
-  // Sync local state with URL when URL changes externally (e.g., browser back/forward or after applying filters)
-  // Only sync when URL actually changes, not when local state changes
+// Manage local filter state that doesn't immediately update URL
+function useLocalFilterState(initialState: FilterState) {
+  const [localSpecies, setLocalSpecies] = useState<string[]>(
+    initialState.species
+  );
+  const [localSizes, setLocalSizes] = useState<string[]>(initialState.sizes);
+  const [localAvailable, setLocalAvailable] = useState<AvailableFilter>(
+    initialState.available
+  );
+
+  const updateLocalFilters = useCallback((newState: FilterState) => {
+    setLocalSpecies(newState.species);
+    setLocalSizes(newState.sizes);
+    setLocalAvailable(newState.available);
+  }, []);
+
+  return {
+    localSpecies,
+    localSizes,
+    localAvailable,
+    updateLocalFilters,
+  };
+}
+
+// Sync local state with URL when URL changes externally
+function useFilterSync(
+  urlFilters: FilterState,
+  updateLocalFilters: (state: FilterState) => void,
+  isOptimisticUpdateRef: MutableRefObject<boolean>
+) {
+  const [, startTransition] = useTransition();
+  const prevUrlValuesRef = useRef<FilterState>({
+    species: [],
+    sizes: [],
+    available: AvailableFilter.All,
+  });
+
   useEffect(() => {
     if (isOptimisticUpdateRef.current) {
       isOptimisticUpdateRef.current = false;
-      // Update ref to current URL values after applying filters
       prevUrlValuesRef.current = {
-        species: [...urlSpecies],
-        sizes: [...urlSizes],
-        available: urlAvailable,
+        species: [...urlFilters.species],
+        sizes: [...urlFilters.sizes],
+        available: urlFilters.available,
       };
       return;
     }
 
-    // Compare current URL values with previous URL values (not local state)
     const prev = prevUrlValuesRef.current;
-    const urlSpeciesStr = [...urlSpecies].sort().join(",");
-    const urlSizesStr = [...urlSizes].sort().join(",");
+    const urlSpeciesStr = [...urlFilters.species].sort().join(",");
+    const urlSizesStr = [...urlFilters.sizes].sort().join(",");
     const prevSpeciesStr = [...prev.species].sort().join(",");
     const prevSizesStr = [...prev.sizes].sort().join(",");
 
     const speciesChanged = urlSpeciesStr !== prevSpeciesStr;
     const sizesChanged = urlSizesStr !== prevSizesStr;
-    const availableChanged = urlAvailable !== prev.available;
+    const availableChanged = urlFilters.available !== prev.available;
 
-    // Only update local state if URL values actually changed
     if (speciesChanged || sizesChanged || availableChanged) {
-      // Use startTransition to defer state updates and avoid cascading renders
       startTransition(() => {
-        setLocalSpecies(urlSpecies);
-        setLocalSizes(urlSizes);
-        setLocalAvailable(urlAvailable);
+        updateLocalFilters(urlFilters);
       });
     }
 
-    // Always update ref to track current URL values (for next comparison)
     prevUrlValuesRef.current = {
-      species: [...urlSpecies],
-      sizes: [...urlSizes],
-      available: urlAvailable,
+      species: [...urlFilters.species],
+      sizes: [...urlFilters.sizes],
+      available: urlFilters.available,
     };
-  }, [urlSpecies, urlSizes, urlAvailable]);
+  }, [urlFilters, updateLocalFilters, isOptimisticUpdateRef]);
+}
 
-  // Use local state for UI
-  const selectedSpecies = localSpecies;
-  const selectedSizes = localSizes;
-  const availableFilter = localAvailable;
+// Build URLSearchParams from filter state
+function buildFilterParams(filters: FilterState): URLSearchParams {
+  const params = new URLSearchParams();
 
-  // Apply filters to URL (called when filter button is clicked)
+  filters.species.forEach((species) => {
+    params.append(PetFilterCategory.SPECIES, species);
+  });
+
+  filters.sizes.forEach((size) => {
+    params.append(PetFilterCategory.SIZE, size);
+  });
+
+  if (filters.available !== AvailableFilter.All) {
+    params.set(
+      PetFilterCategory.AVAILABILITY,
+      filters.available === AvailableFilter.Available
+        ? TrueFalse.TRUE
+        : TrueFalse.FALSE
+    );
+  }
+
+  return params;
+}
+
+// Persist filters to localStorage
+function persistFiltersToStorage(filters: FilterState): void {
+  try {
+    window.localStorage.setItem("listingFilters", JSON.stringify(filters));
+  } catch {
+    // Ignore storage errors (e.g., disabled storage)
+  }
+}
+
+// Calculate active filter count based on URL filters
+function calculateActiveFilterCount(filters: FilterState): number {
+  return (
+    filters.species.length +
+    filters.sizes.length +
+    (filters.available !== AvailableFilter.All ? 1 : 0)
+  );
+}
+
+// Toggle a value in an array (add if not present, remove if present)
+function toggleArrayValue<T>(array: T[], value: T): T[] {
+  return array.includes(value)
+    ? array.filter((v) => v !== value)
+    : [...array, value];
+}
+
+export function usePetFilters(): UsePetFiltersReturn {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [, startTransition] = useTransition();
+  const isOptimisticUpdateRef = useRef(false);
+
+  // Extract URL filters
+  const { urlSpecies, urlSizes, urlAvailable } = useUrlFilters(searchParams);
+
+  // Initialize local filter state from URL
+  const initialFilterState: FilterState = {
+    species: urlSpecies,
+    sizes: urlSizes,
+    available: urlAvailable,
+  };
+
+  // Manage local filter state
+  const { localSpecies, localSizes, localAvailable, updateLocalFilters } =
+    useLocalFilterState(initialFilterState);
+
+  // Sync local state with URL changes
+  const urlFilters: FilterState = {
+    species: urlSpecies,
+    sizes: urlSizes,
+    available: urlAvailable,
+  };
+  useFilterSync(urlFilters, updateLocalFilters, isOptimisticUpdateRef);
+
+  // Apply filters to URL and persist to localStorage
   const applyFilters = useCallback(() => {
-    // Mark as optimistic update
     isOptimisticUpdateRef.current = true;
 
-    // Navigate with transition
+    const currentFilters: FilterState = {
+      species: localSpecies,
+      sizes: localSizes,
+      available: localAvailable,
+    };
+
     startTransition(() => {
-      const params = new URLSearchParams();
-
-      localSpecies.forEach((species) => {
-        params.append(PetFilterCategory.SPECIES, species);
-      });
-
-      localSizes.forEach((size) => {
-        params.append(PetFilterCategory.SIZE, size);
-      });
-
-      if (localAvailable !== AvailableFilter.All) {
-        params.set(
-          PetFilterCategory.AVAILABILITY,
-          localAvailable === AvailableFilter.Available
-            ? TrueFalse.TRUE
-            : TrueFalse.FALSE
-        );
-      }
-
+      const params = buildFilterParams(currentFilters);
       const queryString = params.toString();
       router.push(`/listing${queryString ? `?${queryString}` : ""}`);
-
-      // Persist current filters to localStorage so they can be restored later
-      try {
-        const stored = {
-          species: localSpecies,
-          sizes: localSizes,
-          available: localAvailable,
-        };
-        window.localStorage.setItem("listingFilters", JSON.stringify(stored));
-      } catch {
-        // Ignore storage errors (e.g., disabled storage)
-      }
+      persistFiltersToStorage(currentFilters);
     });
-  }, [router, localSpecies, localSizes, localAvailable]);
+  }, [router, localSpecies, localSizes, localAvailable, isOptimisticUpdateRef]);
 
-  // Update local state only (doesn't update URL)
-  const updateLocalFilters = useCallback(
-    (
-      newSpecies: string[],
-      newSizes: string[],
-      newAvailable: AvailableFilter
-    ) => {
-      setLocalSpecies(newSpecies);
-      setLocalSizes(newSizes);
-      setLocalAvailable(newAvailable);
-    },
-    []
-  );
-
+  // Create toggle handlers
   const handleSpeciesToggle = useCallback(
     (species: string) => {
-      const newSpecies = selectedSpecies.includes(species)
-        ? selectedSpecies.filter((s) => s !== species)
-        : [...selectedSpecies, species];
-      updateLocalFilters(newSpecies, selectedSizes, availableFilter);
+      const newSpecies = toggleArrayValue(localSpecies, species);
+      updateLocalFilters({
+        species: newSpecies,
+        sizes: localSizes,
+        available: localAvailable,
+      });
     },
-    [selectedSpecies, selectedSizes, availableFilter, updateLocalFilters]
+    [localSpecies, localSizes, localAvailable, updateLocalFilters]
   );
 
   const handleSizeToggle = useCallback(
     (size: string) => {
-      const newSizes = selectedSizes.includes(size)
-        ? selectedSizes.filter((s) => s !== size)
-        : [...selectedSizes, size];
-      updateLocalFilters(selectedSpecies, newSizes, availableFilter);
+      const newSizes = toggleArrayValue(localSizes, size);
+      updateLocalFilters({
+        species: localSpecies,
+        sizes: newSizes,
+        available: localAvailable,
+      });
     },
-    [selectedSpecies, selectedSizes, availableFilter, updateLocalFilters]
+    [localSpecies, localSizes, localAvailable, updateLocalFilters]
   );
 
   const handleAvailableChange = useCallback(
     (value: AvailableFilter) => {
-      updateLocalFilters(selectedSpecies, selectedSizes, value);
+      updateLocalFilters({
+        species: localSpecies,
+        sizes: localSizes,
+        available: value,
+      });
     },
-    [selectedSpecies, selectedSizes, updateLocalFilters]
+    [localSpecies, localSizes, updateLocalFilters]
   );
 
-  // Count active filters based on URL params (applied filters)
-  const activeFilterCount =
-    urlSpecies.length +
-    urlSizes.length +
-    (urlAvailable !== AvailableFilter.All ? 1 : 0);
+  // Calculate active filter count
+  const activeFilterCount = calculateActiveFilterCount(urlFilters);
 
   return {
-    selectedSpecies,
-    selectedSizes,
-    availableFilter,
+    selectedSpecies: localSpecies,
+    selectedSizes: localSizes,
+    availableFilter: localAvailable,
     activeFilterCount,
     handleSpeciesToggle,
     handleSizeToggle,
