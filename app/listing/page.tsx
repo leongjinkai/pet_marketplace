@@ -1,5 +1,9 @@
+import { redirect } from "next/navigation";
 import { fetchPets } from "@/lib/api/fetch-pets";
-import { parseFiltersFromSearchParams } from "@/app/listing/lib/filters";
+import {
+  parseFiltersFromSearchParams,
+  validateSearchParams,
+} from "@/app/listing/lib/filters";
 import { PetSpecies, PetSize } from "@/types/listing-types";
 import { PetFilters } from "@/app/listing/components/pet-filters";
 import { PetGrid } from "@/app/listing/components/pet-grid";
@@ -10,6 +14,12 @@ interface ListingPageProps {
 
 export default async function ListingPage({ searchParams }: ListingPageProps) {
   const resolvedSearchParams = await searchParams;
+
+  // Validate search params and redirect if invalid
+  if (!validateSearchParams(resolvedSearchParams)) {
+    redirect("/listing");
+  }
+
   const filters = parseFiltersFromSearchParams(resolvedSearchParams);
 
   const pets = await fetchPets(
