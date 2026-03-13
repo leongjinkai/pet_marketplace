@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { PetImage } from "@/components/common/pet-image";
+import { capitalizeFirst } from "@/lib/utils";
 
 interface PetCardProps {
   pet: Pet;
@@ -24,7 +25,8 @@ export function PetCard({ pet }: PetCardProps) {
         <CardHeader>
           <CardTitle>{pet.name}</CardTitle>
           <CardDescription>
-            {pet.species} • {pet.size} • {pet.age_months} months old
+            {capitalizeFirst(pet.species)} • {capitalizeFirst(pet.size)} •{" "}
+            {pet.age_months} months old
           </CardDescription>
         </CardHeader>
         <CardContent>
