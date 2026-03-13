@@ -42,27 +42,32 @@ npm start
   - `globals.css` – Global styles and Tailwind setup
   - `loading.tsx` / `error.tsx` / `global-error.tsx` / `not-found.tsx` – App-wide boundary components
   - `api/`
+    - `route.ts` – Root API route
     - `inquiries/route.ts` – API route for submitting inquiries
   - `listing/`
     - `page.tsx` – Listing page (pets list + filters)
     - `components/`
-      - `pet-card.tsx`, `pet-grid.tsx`, `pets-list.tsx` – Listing UI components
+      - `pet-card.tsx`, `pet-card-skeleton.tsx`, `pet-grid.tsx`, `pets-list.tsx`, `pet-filters.tsx`, `no-results.tsx` – Listing UI components
       - `filters/` – Filter UI (mobile/desktop, checkbox/radio controls)
     - `lib/`
+      - `data.ts` – Static data used for listings
       - `filters.ts` – Parsing and validation of listing URL filters
       - `use-pet-filters.ts` – Hook for managing filter state and URL syncing
   - `detail/[id]/`
     - `page.tsx` – Pet detail page entry
     - `components/`
-      - `pet-detail.tsx`, `pet-detail-image.tsx`, `pet-detail-info.tsx`, `pet-detail-skeleton.tsx`
-      - `inquiry-form.tsx`, `inquiry-form-dialog.tsx`, `inquiry-success-dialog.tsx`, `inquiry-error-dialog.tsx`
+      - `pet-detail.tsx`, `pet-detail-content.tsx`, `pet-detail-image.tsx`, `pet-detail-info.tsx`, `pet-detail-skeleton.tsx`
+      - `inquiry/`
+        - `inquiry-form.tsx`, `inquiry-form-dialog.tsx`, `inquiry-success-dialog.tsx`, `inquiry-error-dialog.tsx`
     - `lib/`
+      - `data.ts` – Static data used for pet details
       - `use-inquiry-form.ts` – Hook for inquiry form state and submission
       - `utils.tsx` – Detail/inquiry-specific utilities
 
 - `components/`
   - `common/`
     - `back-button.tsx` – Reusable “Back to Listings” button
+    - `inline-error.tsx` – Reusable inline error text
     - `pet-image.tsx` – Resilient image component with skeleton + error fallback
   - `ui/`
     - Shadcn/Tailwind-based primitives: `button.tsx`, `card.tsx`, `badge.tsx`, `dialog.tsx`, `checkbox.tsx`,
@@ -95,11 +100,12 @@ npm start
 
 ## Tech Stack
 
-- **Framework**: Next.js
+- **Framework**: Next.js (App Router)
 - **Language**: TypeScript
 - **UI**: React
 - **UI Library**: Shadcn + Tailwind
 - **Data Fetching**: fetch
+- **State Management**: React useState hook
 
 ## Roadmap
 
@@ -134,23 +140,27 @@ npm start
 3. Pet detail page have their own routes - This means that users can share these links with others
 4. 404 page is configured to handle misconfigured urls within the same domain
 5. Global error page configured to handle any unexpected critical runtime errors beyond error page.
+6. Fallback images for failed image url resolution
 
 ## Assumptions Made
 
 1. Options for the filters are called and received separately from another endpoint. (Currently the types in listing-types are assumed to be all the size, species and availability options)
 2. Small and Fixed number of pet listings
-3. API request and response types are fixed as per indicated in the requirements and they are will always be there
+3. API request and response types are fixed as per indicated in the requirements and fields will always be present (non-optional)
 
 ## Key Tradeoffs/Possible Further improvements
 
-1. Use of state management library such as Zustand or RTK if as there are more features added
+1. Use of state management library such as Zustand or RTK if as there are more features added (Implementing now is overkill)
 2. Standardised Logging instead of just using console logs (Use Sentry or Pino)
 3. Currently the pet listings can be rendered in one go due to the small number of listings - if listings were to exponentially increase, should implment either of below
    1. Load more button
    2. Infinite scrolling + Lazy Loading
    3. Pagination
 4. SEO/SEM optimisation if this is meant to be an external facing website to improve web visibility
-5. Design and Animation - For better user experience
+5. Design and Animation - For better user experience with custom font family etc.
 6. Internationalisation - Support multiple languages if website is meant to be global
 7. Testing - Should have component testing (Jest) and integrated testing (playwright) to ensure components work and show as expected
 8. Type alignment with backend through a common data contract (Using Zod schema) to prevent regressions if there's any change
+9. Performance improvements - Based on chrome devtools lighthouse report (caching disabled), can look into lazy loading images and SEO optimizations
+
+![pet marketplace lighthouse report](public/readme_lighthouse_perf.png)
