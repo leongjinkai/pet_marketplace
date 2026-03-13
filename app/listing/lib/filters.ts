@@ -1,4 +1,4 @@
-import { FetchPetsFilters } from "@/lib/api";
+import { FetchPetsFilters } from "@/lib/api/fetch-pets";
 
 export function parseFiltersFromSearchParams(searchParams: {
   [key: string]: string | string[] | undefined;

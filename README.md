@@ -57,8 +57,8 @@ npm start
 
 ### Pet Listing Page
 
-- [ ] Fetch Pets
-- [ ] Render each pet as a card/row
+- [x] Fetch Pets
+- [x] Render each pet as a card/row
 - [ ] Unavailable pets should be visually distinguishable
 
 ### Filters (Support species, size and availability query parameters)
