@@ -1,4 +1,4 @@
-import { Pet } from "@/types/listing-types";
+import { Pet, PetFilterCategory } from "@/types/listing-types";
 
 const API_BASE_URL = process.env.BACKEND_URL;
 
@@ -18,16 +18,19 @@ export async function fetchPets(filters?: FetchPetsFilters): Promise<Pet[]> {
   if (filters) {
     if (filters.species && filters.species.length > 0) {
       filters.species.forEach((species) => {
-        url.searchParams.append("species", species);
+        url.searchParams.append(PetFilterCategory.SPECIES, species);
       });
     }
     if (filters.size && filters.size.length > 0) {
       filters.size.forEach((size) => {
-        url.searchParams.append("size", size);
+        url.searchParams.append(PetFilterCategory.SIZE, size);
       });
     }
     if (filters.available !== undefined) {
-      url.searchParams.append("available", filters.available.toString());
+      url.searchParams.append(
+        PetFilterCategory.AVAILABILITY,
+        filters.available.toString()
+      );
     }
   }
 

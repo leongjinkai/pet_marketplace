@@ -9,6 +9,7 @@ import {
   useEffect,
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { PetFilterCategory, TrueFalse } from "@/types/listing-types";
 
 export enum AvailableFilter {
   All = "all",
@@ -40,15 +41,18 @@ export function usePetFilters(): UsePetFiltersReturn {
 
   // Derive current URL values
   const urlSpecies = useMemo(
-    () => searchParams.getAll("species"),
+    () => searchParams.getAll(PetFilterCategory.SPECIES),
     [searchParams]
   );
-  const urlSizes = useMemo(() => searchParams.getAll("size"), [searchParams]);
+  const urlSizes = useMemo(
+    () => searchParams.getAll(PetFilterCategory.SIZE),
+    [searchParams]
+  );
   const urlAvailable = useMemo(() => {
-    const availableParam = searchParams.get("available");
-    return availableParam === "true"
+    const availableParam = searchParams.get(PetFilterCategory.AVAILABILITY);
+    return availableParam === TrueFalse.TRUE
       ? AvailableFilter.Available
-      : availableParam === "false"
+      : availableParam === TrueFalse.FALSE
         ? AvailableFilter.NotAvailable
         : AvailableFilter.All;
   }, [searchParams]);
@@ -117,17 +121,19 @@ export function usePetFilters(): UsePetFiltersReturn {
       const params = new URLSearchParams();
 
       localSpecies.forEach((species) => {
-        params.append("species", species);
+        params.append(PetFilterCategory.SPECIES, species);
       });
 
       localSizes.forEach((size) => {
-        params.append("size", size);
+        params.append(PetFilterCategory.SIZE, size);
       });
 
       if (localAvailable !== AvailableFilter.All) {
         params.set(
-          "available",
-          localAvailable === AvailableFilter.Available ? "true" : "false"
+          PetFilterCategory.AVAILABILITY,
+          localAvailable === AvailableFilter.Available
+            ? TrueFalse.TRUE
+            : TrueFalse.FALSE
         );
       }
 

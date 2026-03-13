@@ -9,6 +9,12 @@ export type Pet = {
   species: PetSpecies;
 };
 
+export enum PetFilterCategory {
+  SIZE = "size",
+  SPECIES = "species",
+  AVAILABILITY = "available",
+}
+
 export enum PetSize {
   SMALL = "small",
   MEDIUM = "medium",
@@ -20,4 +26,9 @@ export enum PetSpecies {
   RABBIT = "rabbit",
   DOG = "dog",
   CAT = "cat",
+}
+
+export enum TrueFalse {
+  TRUE = "true",
+  FALSE = "false",
 }

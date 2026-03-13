@@ -1,5 +1,10 @@
 import { FetchPetsFilters } from "@/lib/api/fetch-pets";
-import { PetSpecies, PetSize } from "@/types/listing-types";
+import {
+  PetSpecies,
+  PetSize,
+  PetFilterCategory,
+  TrueFalse,
+} from "@/types/listing-types";
 
 /**
  * Normalizes a search param value to an array or undefined.
@@ -25,10 +30,10 @@ function normalizeToArray(
 function normalizeToBoolean(
   value: string | string[] | undefined
 ): boolean | undefined {
-  if (value === "true") {
+  if (value === TrueFalse.TRUE) {
     return true;
   }
-  if (value === "false") {
+  if (value === TrueFalse.FALSE) {
     return false;
   }
   return undefined;
@@ -37,9 +42,9 @@ function normalizeToBoolean(
 export function parseFiltersFromSearchParams(searchParams: {
   [key: string]: string | string[] | undefined;
 }): FetchPetsFilters {
-  const speciesParam = searchParams.species;
-  const sizeParam = searchParams.size;
-  const availableParam = searchParams.available;
+  const speciesParam = searchParams[PetFilterCategory.SPECIES];
+  const sizeParam = searchParams[PetFilterCategory.SIZE];
+  const availableParam = searchParams[PetFilterCategory.AVAILABILITY];
 
   const species = normalizeToArray(speciesParam);
   const size = normalizeToArray(sizeParam);
@@ -61,9 +66,13 @@ export function validateSearchParams(searchParams: {
   const validSizes = Object.values(PetSize);
 
   // Check for invalid query parameters (only allow species, size, available)
-  const allowedParams = ["species", "size", "available"];
+  const allowedParams = [
+    PetFilterCategory.SPECIES,
+    PetFilterCategory.SIZE,
+    PetFilterCategory.AVAILABILITY,
+  ];
   const hasInvalidParams = Object.keys(searchParams).some(
-    (key) => !allowedParams.includes(key)
+    (key) => !allowedParams.includes(key as PetFilterCategory)
   );
 
   if (hasInvalidParams) {
@@ -71,7 +80,7 @@ export function validateSearchParams(searchParams: {
   }
 
   // Validate species values
-  const speciesParam = searchParams.species;
+  const speciesParam = searchParams[PetFilterCategory.SPECIES];
   if (speciesParam) {
     const speciesArray = normalizeToArray(speciesParam);
     if (speciesArray) {
@@ -85,7 +94,7 @@ export function validateSearchParams(searchParams: {
   }
 
   // Validate size values
-  const sizeParam = searchParams.size;
+  const sizeParam = searchParams[PetFilterCategory.SIZE];
   if (sizeParam) {
     const sizeArray = normalizeToArray(sizeParam);
     if (sizeArray) {
@@ -99,11 +108,11 @@ export function validateSearchParams(searchParams: {
   }
 
   // Validate available value (must be "true", "false", or undefined)
-  const availableParam = searchParams.available;
+  const availableParam = searchParams[PetFilterCategory.AVAILABILITY];
   if (
     availableParam !== undefined &&
-    availableParam !== "true" &&
-    availableParam !== "false"
+    availableParam !== TrueFalse.TRUE &&
+    availableParam !== TrueFalse.FALSE
   ) {
     return false;
   }
