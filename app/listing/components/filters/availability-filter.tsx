@@ -21,18 +21,18 @@ export function AvailabilityFilter({
   handleAvailableChange,
 }: AvailabilityFilterProps) {
   const [open, setOpen] = useState(false);
-  const hasActiveFilter = availableFilter !== AvailableFilter.All;
+  const label =
+    availableFilter === AvailableFilter.All
+      ? "Availability: All"
+      : availableFilter === AvailableFilter.Available
+        ? "Availability: Available"
+        : "Availability: Not Available";
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant="outline" className="cursor-pointer">
-          Availability
-          {hasActiveFilter && (
-            <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
-              1
-            </span>
-          )}
+          {label}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-fit" align="start">

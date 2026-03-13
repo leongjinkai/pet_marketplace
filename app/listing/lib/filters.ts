@@ -7,18 +7,17 @@ import {
 } from "@/types/listing-types";
 
 /**
- * Normalizes a search param value to an array or undefined.
- * - If already an array, returns it
- * - If a string, wraps it in an array
+ * Returns the first species/size value from search params (single selection).
+ * - If array, returns first element
+ * - If string, returns it
  * - If undefined, returns undefined
  */
-function normalizeToArray(
-  value: string | string[] | undefined
-): string[] | undefined {
+function firstValue(value: string | string[] | undefined): string | undefined {
   if (value === undefined) {
     return undefined;
   }
-  return Array.isArray(value) ? value : [value];
+  const single = Array.isArray(value) ? value[0] : value;
+  return single === undefined || single === "" ? undefined : single;
 }
 
 /**
@@ -46,14 +45,13 @@ export function parseFiltersFromSearchParams(searchParams: {
   const sizeParam = searchParams[PetFilterCategory.SIZE];
   const availableParam = searchParams[PetFilterCategory.AVAILABILITY];
 
-  const species = normalizeToArray(speciesParam);
-  const size = normalizeToArray(sizeParam);
+  const species = firstValue(speciesParam);
+  const size = firstValue(sizeParam);
   const available = normalizeToBoolean(availableParam);
 
-  // Build filters object
   const filters: FetchPetsFilters = {};
-  if (species && species.length > 0) filters.species = species;
-  if (size && size.length > 0) filters.size = size;
+  if (species) filters.species = [species];
+  if (size) filters.size = [size];
   if (available !== undefined) filters.available = available;
 
   return filters;
@@ -79,31 +77,21 @@ export function validateSearchParams(searchParams: {
     return false;
   }
 
-  // Validate species values
+  // Validate species (single value)
   const speciesParam = searchParams[PetFilterCategory.SPECIES];
   if (speciesParam) {
-    const speciesArray = normalizeToArray(speciesParam);
-    if (speciesArray) {
-      const hasInvalidSpecies = speciesArray.some(
-        (s) => !validSpecies.includes(s as PetSpecies)
-      );
-      if (hasInvalidSpecies) {
-        return false;
-      }
+    const s = firstValue(speciesParam);
+    if (s && !validSpecies.includes(s as PetSpecies)) {
+      return false;
     }
   }
 
-  // Validate size values
+  // Validate size (single value)
   const sizeParam = searchParams[PetFilterCategory.SIZE];
   if (sizeParam) {
-    const sizeArray = normalizeToArray(sizeParam);
-    if (sizeArray) {
-      const hasInvalidSize = sizeArray.some(
-        (s) => !validSizes.includes(s as PetSize)
-      );
-      if (hasInvalidSize) {
-        return false;
-      }
+    const s = firstValue(sizeParam);
+    if (s && !validSizes.includes(s as PetSize)) {
+      return false;
     }
   }
 

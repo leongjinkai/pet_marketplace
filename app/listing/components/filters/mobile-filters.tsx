@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import {
   Popover,
@@ -12,7 +11,12 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ApplyFiltersButton } from "./apply-filters-button";
 import { ClearFiltersButton } from "./clear-filters-button";
-import { AvailableFilter } from "../../lib/use-pet-filters";
+import { capitalize } from "@/lib/utils";
+import {
+  ALL_SPECIES,
+  ALL_SIZES,
+  AvailableFilter,
+} from "../../lib/use-pet-filters";
 import type { FiltersViewModel } from "../pet-filters";
 
 interface MobileFiltersProps {
@@ -30,16 +34,32 @@ export function MobileFilters({
     selectedSpecies,
     selectedSizes,
     availableFilter,
-    activeFilterCount,
     isApplyingFilters,
     hasSelectedFilters,
-    handleSpeciesToggle,
-    handleSizeToggle,
+    handleSpeciesChange,
+    handleSizeChange,
     handleAvailableChange,
     applyFilters,
     resetFilters,
   } = model;
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const activeLabels: string[] = [];
+  if (selectedSpecies !== ALL_SPECIES) {
+    activeLabels.push(capitalize(selectedSpecies));
+  }
+  if (selectedSizes !== ALL_SIZES) {
+    activeLabels.push(capitalize(selectedSizes));
+  }
+  if (availableFilter === AvailableFilter.Available) {
+    activeLabels.push("Available");
+  } else if (availableFilter === AvailableFilter.NotAvailable) {
+    activeLabels.push("Not Available");
+  }
+  const filtersButtonLabel =
+    activeLabels.length > 0
+      ? `Filters: ${activeLabels.join(" · ")}`
+      : "Filters";
 
   const handleApplyFilters = () => {
     applyFilters();
@@ -51,19 +71,27 @@ export function MobileFilters({
       <Popover open={mobileOpen} onOpenChange={setMobileOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline" className="cursor-pointer">
-            Filters
-            {activeFilterCount > 0 && (
-              <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
-                {activeFilterCount}
-              </span>
-            )}
+            {filtersButtonLabel}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-60" align="start">
           <div className="space-y-4">
             <div>
               <h3 className="mb-2 text-sm font-semibold">Species</h3>
-              <div className="space-y-2">
+              <RadioGroup
+                value={selectedSpecies || ALL_SPECIES}
+                onValueChange={handleSpeciesChange}
+                className="space-y-2"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value={ALL_SPECIES} id="mobile-species-all" />
+                  <Label
+                    htmlFor="mobile-species-all"
+                    className="text-sm cursor-pointer"
+                  >
+                    All
+                  </Label>
+                </div>
                 {uniqueSpecies.map((species) => {
                   const id = `mobile-species-${species}`;
                   return (
@@ -71,11 +99,7 @@ export function MobileFilters({
                       key={species}
                       className="flex items-center space-x-2 cursor-pointer"
                     >
-                      <Checkbox
-                        id={id}
-                        checked={selectedSpecies.includes(species)}
-                        onCheckedChange={() => handleSpeciesToggle(species)}
-                      />
+                      <RadioGroupItem value={species} id={id} />
                       <Label
                         htmlFor={id}
                         className="text-sm capitalize cursor-pointer"
@@ -85,12 +109,25 @@ export function MobileFilters({
                     </div>
                   );
                 })}
-              </div>
+              </RadioGroup>
             </div>
 
             <div>
               <h3 className="mb-2 text-sm font-semibold">Size</h3>
-              <div className="space-y-2">
+              <RadioGroup
+                value={selectedSizes || ALL_SIZES}
+                onValueChange={handleSizeChange}
+                className="space-y-2"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value={ALL_SIZES} id="mobile-size-all" />
+                  <Label
+                    htmlFor="mobile-size-all"
+                    className="text-sm cursor-pointer"
+                  >
+                    All
+                  </Label>
+                </div>
                 {uniqueSizes.map((size) => {
                   const id = `mobile-size-${size}`;
                   return (
@@ -98,11 +135,7 @@ export function MobileFilters({
                       key={size}
                       className="flex items-center space-x-2 cursor-pointer"
                     >
-                      <Checkbox
-                        id={id}
-                        checked={selectedSizes.includes(size)}
-                        onCheckedChange={() => handleSizeToggle(size)}
-                      />
+                      <RadioGroupItem value={size} id={id} />
                       <Label
                         htmlFor={id}
                         className="text-sm capitalize cursor-pointer"
@@ -112,7 +145,7 @@ export function MobileFilters({
                     </div>
                   );
                 })}
-              </div>
+              </RadioGroup>
             </div>
 
             <div>

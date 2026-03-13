@@ -2,42 +2,55 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { capitalize } from "@/lib/utils";
+import { ALL_SPECIES } from "../../lib/use-pet-filters";
 
 interface SpeciesFilterProps {
   uniqueSpecies: string[];
-  selectedSpecies: string[];
-  handleSpeciesToggle: (species: string) => void;
+  selectedSpecies: string;
+  handleSpeciesChange: (species: string) => void;
 }
 
 export function SpeciesFilter({
   uniqueSpecies,
   selectedSpecies,
-  handleSpeciesToggle,
+  handleSpeciesChange,
 }: SpeciesFilterProps) {
   const [open, setOpen] = useState(false);
-  const activeCount = selectedSpecies.length;
+  const label =
+    selectedSpecies === ALL_SPECIES
+      ? "Species: All"
+      : `Species: ${capitalize(selectedSpecies)}`;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant="outline" className="cursor-pointer">
-          Species
-          {activeCount > 0 && (
-            <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
-              {activeCount}
-            </span>
-          )}
+          {label}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-fit" align="start">
-        <div className="space-y-2">
+        <RadioGroup
+          value={selectedSpecies || ALL_SPECIES}
+          onValueChange={handleSpeciesChange}
+          className="space-y-2"
+        >
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value={ALL_SPECIES} id="desktop-species-all" />
+            <Label
+              htmlFor="desktop-species-all"
+              className="text-sm cursor-pointer"
+            >
+              All
+            </Label>
+          </div>
           {uniqueSpecies.map((species) => {
             const id = `desktop-species-${species}`;
             return (
@@ -45,11 +58,7 @@ export function SpeciesFilter({
                 key={species}
                 className="flex items-center space-x-2 cursor-pointer"
               >
-                <Checkbox
-                  id={id}
-                  checked={selectedSpecies.includes(species)}
-                  onCheckedChange={() => handleSpeciesToggle(species)}
-                />
+                <RadioGroupItem value={species} id={id} />
                 <Label
                   htmlFor={id}
                   className="text-sm capitalize cursor-pointer"
@@ -59,7 +68,7 @@ export function SpeciesFilter({
               </div>
             );
           })}
-        </div>
+        </RadioGroup>
       </PopoverContent>
     </Popover>
   );

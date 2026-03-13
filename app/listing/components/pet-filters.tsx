@@ -11,14 +11,14 @@ interface PetFiltersProps {
 }
 
 export type FiltersViewModel = {
-  selectedSpecies: string[];
-  selectedSizes: string[];
+  selectedSpecies: string;
+  selectedSizes: string;
   availableFilter: AvailableFilter;
   activeFilterCount: number;
   isApplyingFilters: boolean;
   hasSelectedFilters: boolean;
-  handleSpeciesToggle: (species: string) => void;
-  handleSizeToggle: (size: string) => void;
+  handleSpeciesChange: (species: string) => void;
+  handleSizeChange: (size: string) => void;
   handleAvailableChange: (value: AvailableFilter) => void;
   applyFilters: () => void;
   resetFilters: () => void;
@@ -34,8 +34,8 @@ export function PetFilters({ uniqueSpecies, uniqueSizes }: PetFiltersProps) {
     activeFilterCount: filters.activeFilterCount,
     isApplyingFilters: filters.isApplyingFilters,
     hasSelectedFilters: filters.hasSelectedFilters,
-    handleSpeciesToggle: filters.handleSpeciesToggle,
-    handleSizeToggle: filters.handleSizeToggle,
+    handleSpeciesChange: filters.handleSpeciesChange,
+    handleSizeChange: filters.handleSizeChange,
     handleAvailableChange: filters.handleAvailableChange,
     applyFilters: filters.applyFilters,
     resetFilters: filters.resetFilters,

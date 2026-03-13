@@ -24,8 +24,8 @@ export function DesktopFilters({
     availableFilter,
     isApplyingFilters,
     hasSelectedFilters,
-    handleSpeciesToggle,
-    handleSizeToggle,
+    handleSpeciesChange,
+    handleSizeChange,
     handleAvailableChange,
     applyFilters,
     resetFilters,
@@ -35,12 +35,12 @@ export function DesktopFilters({
       <SpeciesFilter
         uniqueSpecies={uniqueSpecies}
         selectedSpecies={selectedSpecies}
-        handleSpeciesToggle={handleSpeciesToggle}
+        handleSpeciesChange={handleSpeciesChange}
       />
       <SizeFilter
         uniqueSizes={uniqueSizes}
         selectedSizes={selectedSizes}
-        handleSizeToggle={handleSizeToggle}
+        handleSizeChange={handleSizeChange}
       />
       <AvailabilityFilter
         availableFilter={availableFilter}

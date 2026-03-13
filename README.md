@@ -72,7 +72,7 @@ npm start
     - `inline-error.tsx` – Reusable inline error text
     - `pet-image.tsx` – Resilient image component with skeleton + error fallback
   - `ui/`
-    - Shadcn/Tailwind-based primitives: `button.tsx`, `card.tsx`, `badge.tsx`, `dialog.tsx`, `checkbox.tsx`,
+    - Shadcn/Tailwind-based primitives: `button.tsx`, `card.tsx`, `badge.tsx`, `dialog.tsx`,
       `radio-group.tsx`, `field.tsx`, `input.tsx`, `textarea.tsx`, `popover.tsx`, `label.tsx`, `separator.tsx`,
       `skeleton.tsx`, `spinner.tsx`
 
@@ -183,11 +183,12 @@ This ensures code style and linting are enforced before every commit.
    1. Load more button
    2. Infinite scrolling + Lazy Loading
    3. Pagination
-4. SEO/SEM optimisation if this is meant to be an external facing website to improve web visibility
-5. Design and Animation - For better user experience with custom font family etc.
-6. Internationalisation - Support multiple languages if website is meant to be global
-7. Testing - Should have component testing (Jest) and integrated testing (playwright) to ensure components work and show as expected
-8. Type alignment with backend through a common data contract (Using Zod schema) to prevent regressions if there's any change
-9. Performance improvements - Based on chrome devtools lighthouse report (caching disabled), can look into lazy loading images and SEO optimizations
+4. GET pet listings endpoint only allows single species/size/availability - Ideally should be able to handle multiples of each filter category
+5. SEO/SEM optimisation if this is meant to be an external facing website to improve web visibility
+6. Design and Animation - For better user experience with custom font family etc.
+7. Internationalisation - Support multiple languages if website is meant to be global
+8. Testing - Should have component testing (Jest) and integrated testing (playwright) to ensure components work and show as expected
+9. Type alignment with backend through a common data contract (Using Zod schema) to prevent regressions if there's any change
+10. Performance improvements - Based on chrome devtools lighthouse report (caching disabled), can look into lazy loading images and SEO optimizations
 
 ![pet marketplace lighthouse report](public/readme_lighthouse_perf.png)
