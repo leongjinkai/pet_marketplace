@@ -59,25 +59,25 @@ npm start
 
 - [x] Fetch Pets
 - [x] Render each pet as a card/row
-- [ ] Unavailable pets should be visually distinguishable
+- [x] Unavailable pets should be visually distinguishable
 
 ### Filters (Support species, size and availability query parameters)
 
-- [ ] Filters update display results
-- [ ] UI handle loading and error states
+- [x] Filters update display results
+- [x] UI handle loading and error states
 
 ### Pet Detail View
 
-- [ ] When user select a pet from listing page, show a detail view (Image, Details, Inquire CTA)
-- [ ] If pet unavailable, inquiry action should be disabled
+- [x] When user select a pet from listing page, show a detail view (Image, Details, Inquire CTA)
+- [x] If pet unavailable, inquiry action should be disabled
 
 ### Inquiry Form
 
-- [ ] Submit Inquiry Form
-- [ ] Form Validation
-- [ ] Handle Form submission Success with inquiryId, receivedAt, Pet name and image
-- [ ] Handle Form submission Error
-- [ ] Prevent Duplicate Submissions when request is in flight
+- [x] Submit Inquiry Form
+- [x] Form Validation
+- [x] Handle Form submission Success with inquiryId, receivedAt, Pet name and image - popup dialog
+- [x] Handle Form submission Error - throw browser error
+- [x] Prevent Duplicate Submissions when request is in flight - Button is in loading state
 
 ## Assumptions Made
 
