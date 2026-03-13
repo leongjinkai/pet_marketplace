@@ -11,6 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { AvailableFilter } from "../../lib/use-pet-filters";
+import { Spinner } from "@/components/ui/spinner";
 
 interface MobileFiltersProps {
   uniqueSpecies: string[];
@@ -19,6 +20,8 @@ interface MobileFiltersProps {
   selectedSizes: string[];
   availableFilter: AvailableFilter;
   activeFilterCount: number;
+  isApplyingFilters: boolean;
+  hasSelectedFilters: boolean;
   handleSpeciesToggle: (species: string) => void;
   handleSizeToggle: (size: string) => void;
   handleAvailableChange: (value: AvailableFilter) => void;
@@ -33,6 +36,8 @@ export function MobileFilters({
   selectedSizes,
   availableFilter,
   activeFilterCount,
+  isApplyingFilters,
+  hasSelectedFilters,
   handleSpeciesToggle,
   handleSizeToggle,
   handleAvailableChange,
@@ -155,22 +160,33 @@ export function MobileFilters({
               </RadioGroup>
             </div>
 
-            <div className="flex items-center justify-between gap-2 pt-2 border-t">
-              <Button
-                onClick={resetFilters}
-                variant="outline"
-                className="cursor-pointer"
-              >
-                Clear
-              </Button>
-              <Button
-                onClick={handleApplyFilters}
-                className="flex-1 cursor-pointer"
-                variant="default"
-              >
-                Apply Filters
-              </Button>
-            </div>
+            {hasSelectedFilters && (
+              <div className="flex items-center justify-between gap-2 pt-2 border-t">
+                <Button
+                  onClick={resetFilters}
+                  variant="outline"
+                  className="cursor-pointer"
+                  disabled={isApplyingFilters}
+                >
+                  Clear
+                </Button>
+                <Button
+                  onClick={handleApplyFilters}
+                  className="flex-1 cursor-pointer"
+                  variant="default"
+                  disabled={isApplyingFilters}
+                >
+                  {isApplyingFilters ? (
+                    <span className="inline-flex items-center justify-center gap-2">
+                      <Spinner className="size-3" />
+                      Applying…
+                    </span>
+                  ) : (
+                    "Apply Filters"
+                  )}
+                </Button>
+              </div>
+            )}
           </div>
         </PopoverContent>
       </Popover>

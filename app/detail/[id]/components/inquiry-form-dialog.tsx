@@ -15,14 +15,13 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   Field,
   FieldLabel,
-  FieldDescription,
   FieldError,
   FieldContent,
   FieldGroup,
 } from "@/components/ui/field";
-import { Pet } from "@/types/listing-types";
-import { type ValidationErrors } from "../lib/utils";
-import { type InquiryFormData } from "@/lib/api/submit-inquiry";
+import type { Pet } from "@/types/listing-types";
+import type { ValidationErrors } from "../lib/utils";
+import type { InquiryFormData } from "@/lib/api/submit-inquiry";
 
 interface InquiryFormDialogProps {
   open: boolean;
@@ -52,18 +51,22 @@ export function InquiryFormDialog({
       <DialogTrigger asChild>
         <Button
           disabled={!pet.available}
-          className={pet.available ? "cursor-pointer" : ""}
+          className={
+            pet.available ? "cursor-pointer" : "cursor-not-allowed opacity-60"
+          }
           size="lg"
           variant="outline"
         >
-          Inquire
+          {pet.available ? "Inquire" : "Inquiries unavailable"}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Inquire about {pet.name}</DialogTitle>
           <DialogDescription>
-            Fill out the form below to send an inquiry about this pet.
+            {pet.available
+              ? "Fill out the form below to send an inquiry about this pet."
+              : "This pet is currently unavailable, so inquiries cannot be submitted."}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={onSubmit}>

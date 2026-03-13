@@ -23,6 +23,8 @@ export interface UsePetFiltersReturn {
   selectedSizes: string[];
   availableFilter: AvailableFilter;
   activeFilterCount: number;
+  isApplyingFilters: boolean;
+  hasSelectedFilters: boolean;
   handleSpeciesToggle: (species: string) => void;
   handleSizeToggle: (size: string) => void;
   handleAvailableChange: (value: AvailableFilter) => void;
@@ -182,7 +184,7 @@ function toggleArrayValue<T>(array: T[], value: T): T[] {
 export function usePetFilters(): UsePetFiltersReturn {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
   const isOptimisticUpdateRef = useRef(false);
 
   // Extract URL filters
@@ -279,12 +281,19 @@ export function usePetFilters(): UsePetFiltersReturn {
 
   // Calculate active filter count
   const activeFilterCount = calculateActiveFilterCount(urlFilters);
+  const hasSelectedFilters =
+    localSpecies.length +
+      localSizes.length +
+      (localAvailable !== AvailableFilter.All ? 1 : 0) >
+    0;
 
   return {
     selectedSpecies: localSpecies,
     selectedSizes: localSizes,
     availableFilter: localAvailable,
     activeFilterCount,
+    isApplyingFilters: isPending,
+    hasSelectedFilters,
     handleSpeciesToggle,
     handleSizeToggle,
     handleAvailableChange,

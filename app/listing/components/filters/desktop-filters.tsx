@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { SpeciesFilter } from "./species-filter";
 import { SizeFilter } from "./size-filter";
 import { AvailabilityFilter } from "./availability-filter";
@@ -12,6 +13,8 @@ interface DesktopFiltersProps {
   selectedSpecies: string[];
   selectedSizes: string[];
   availableFilter: AvailableFilter;
+  isApplyingFilters: boolean;
+  hasSelectedFilters: boolean;
   handleSpeciesToggle: (species: string) => void;
   handleSizeToggle: (size: string) => void;
   handleAvailableChange: (value: AvailableFilter) => void;
@@ -25,6 +28,8 @@ export function DesktopFilters({
   selectedSpecies,
   selectedSizes,
   availableFilter,
+  isApplyingFilters,
+  hasSelectedFilters,
   handleSpeciesToggle,
   handleSizeToggle,
   handleAvailableChange,
@@ -47,20 +52,33 @@ export function DesktopFilters({
         availableFilter={availableFilter}
         handleAvailableChange={handleAvailableChange}
       />
-      <Button
-        onClick={applyFilters}
-        variant="default"
-        className="ml-auto cursor-pointer"
-      >
-        Apply Filters
-      </Button>
-      <Button
-        onClick={resetFilters}
-        variant="outline"
-        className="cursor-pointer"
-      >
-        Clear
-      </Button>
+      {hasSelectedFilters && (
+        <>
+          <Button
+            onClick={applyFilters}
+            variant="default"
+            className="ml-auto cursor-pointer"
+            disabled={isApplyingFilters}
+          >
+            {isApplyingFilters ? (
+              <span className="inline-flex items-center justify-center gap-2">
+                <Spinner className="size-4" />
+                Applying…
+              </span>
+            ) : (
+              "Apply Filters"
+            )}
+          </Button>
+          <Button
+            onClick={resetFilters}
+            variant="outline"
+            className="cursor-pointer"
+            disabled={isApplyingFilters}
+          >
+            Clear
+          </Button>
+        </>
+      )}
     </div>
   );
 }

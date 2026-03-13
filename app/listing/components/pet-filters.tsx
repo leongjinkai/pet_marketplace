@@ -15,6 +15,8 @@ export function PetFilters({ uniqueSpecies, uniqueSizes }: PetFiltersProps) {
     selectedSizes,
     availableFilter,
     activeFilterCount,
+    isApplyingFilters,
+    hasSelectedFilters,
     handleSpeciesToggle,
     handleSizeToggle,
     handleAvailableChange,
@@ -31,6 +33,8 @@ export function PetFilters({ uniqueSpecies, uniqueSizes }: PetFiltersProps) {
         selectedSizes={selectedSizes}
         availableFilter={availableFilter}
         activeFilterCount={activeFilterCount}
+        isApplyingFilters={isApplyingFilters}
+        hasSelectedFilters={hasSelectedFilters}
         handleSpeciesToggle={handleSpeciesToggle}
         handleSizeToggle={handleSizeToggle}
         handleAvailableChange={handleAvailableChange}
@@ -43,6 +47,8 @@ export function PetFilters({ uniqueSpecies, uniqueSizes }: PetFiltersProps) {
         selectedSpecies={selectedSpecies}
         selectedSizes={selectedSizes}
         availableFilter={availableFilter}
+        isApplyingFilters={isApplyingFilters}
+        hasSelectedFilters={hasSelectedFilters}
         handleSpeciesToggle={handleSpeciesToggle}
         handleSizeToggle={handleSizeToggle}
         handleAvailableChange={handleAvailableChange}
