@@ -1,9 +1,3 @@
-export interface InquiryFormData {
-  fullName: string;
-  email: string;
-  message: string;
-}
-
 export interface ValidationErrors {
   fullName?: string;
   email?: string;
@@ -15,7 +9,11 @@ export function validateEmail(email: string): boolean {
   return emailRegex.test(email);
 }
 
-export function validateInquiryForm(formData: InquiryFormData): {
+export function validateInquiryForm(formData: {
+  fullName: string;
+  email: string;
+  message: string;
+}): {
   isValid: boolean;
   errors: ValidationErrors;
 } {
@@ -39,4 +37,15 @@ export function validateInquiryForm(formData: InquiryFormData): {
     isValid: Object.keys(errors).length === 0,
     errors,
   };
+}
+
+export function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
