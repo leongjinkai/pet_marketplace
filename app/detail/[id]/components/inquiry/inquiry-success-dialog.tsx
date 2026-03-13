@@ -1,5 +1,6 @@
 "use client";
 
+import { PetImage } from "@/components/common/pet-image";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,10 +10,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Pet } from "@/types/listing-types";
-import { type InquiryResponse } from "@/lib/api/submit-inquiry";
-import { formatDate } from "../lib/utils";
-import { PetImage } from "@/components/common/pet-image";
+import type { InquiryResponse } from "@/lib/api/submit-inquiry";
+import type { Pet } from "@/types/listing-types";
+import { formatDate } from "../../lib/utils";
 
 interface InquirySuccessDialogProps {
   open: boolean;

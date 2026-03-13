@@ -10,18 +10,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Field,
-  FieldLabel,
-  FieldError,
   FieldContent,
+  FieldError,
   FieldGroup,
+  FieldLabel,
 } from "@/components/ui/field";
-import type { Pet } from "@/types/listing-types";
-import type { ValidationErrors } from "../lib/utils";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import type { InquiryFormData } from "@/lib/api/submit-inquiry";
+import type { Pet } from "@/types/listing-types";
+import type { ValidationErrors } from "../../lib/utils";
 
 interface InquiryFormDialogProps {
   open: boolean;
