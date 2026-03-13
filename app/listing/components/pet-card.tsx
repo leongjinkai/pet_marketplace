@@ -1,4 +1,4 @@
-import { Pet } from "@/types/listing-types";
+import type { Pet } from "@/types/listing-types";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -13,7 +13,11 @@ export function PetCard({ pet }: PetCardProps) {
     <Link href={`/detail/${pet.id}`} className="block">
       <Card className="cursor-pointer transition-transform hover:scale-105 hover:shadow-lg pt-0 border-b-2">
         <div className="relative w-full aspect-square bg-muted">
-          <PetImage src={pet.image_url} alt={pet.name} />
+          <PetImage
+            src={pet.image_url}
+            alt={pet.name}
+            sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
+          />
         </div>
         <CardHeader>
           <CardTitle className="font-bold text-3xl">{pet.name}</CardTitle>

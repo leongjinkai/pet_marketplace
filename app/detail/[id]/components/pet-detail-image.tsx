@@ -1,4 +1,4 @@
-import { Pet } from "@/types/listing-types";
+import type { Pet } from "@/types/listing-types";
 import { PetImage } from "@/components/common/pet-image";
 
 interface PetDetailImageProps {
@@ -14,6 +14,7 @@ export function PetDetailImage({ pet }: PetDetailImageProps) {
         className="rounded-lg"
         priority
         rounded
+        sizes="(min-width: 1024px) 40vw, 100vw"
       />
     </div>
   );

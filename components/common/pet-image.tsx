@@ -12,6 +12,7 @@ interface PetImageProps {
   className?: string;
   priority?: boolean;
   rounded?: boolean;
+  sizes?: string;
 }
 
 export function PetImage({
@@ -20,6 +21,7 @@ export function PetImage({
   className = "",
   priority = false,
   rounded = false,
+  sizes,
 }: PetImageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -51,6 +53,7 @@ export function PetImage({
         src={src}
         alt={alt}
         fill
+        sizes={sizes}
         className={cn(
           "object-cover transition-opacity duration-300",
           className,
