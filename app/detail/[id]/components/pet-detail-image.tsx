@@ -1,5 +1,5 @@
 import { Pet } from "@/types/listing-types";
-import { PetImage } from "@/app/listing/components/pet-image";
+import { PetImage } from "@/components/common/pet-image";
 
 interface PetDetailImageProps {
   pet: Pet;

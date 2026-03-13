@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { PetImage } from "./pet-image";
+import { PetImage } from "@/components/common/pet-image";
 
 interface PetCardProps {
   pet: Pet;

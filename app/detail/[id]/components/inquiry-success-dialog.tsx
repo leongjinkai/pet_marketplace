@@ -12,7 +12,7 @@ import {
 import { Pet } from "@/types/listing-types";
 import { type InquiryResponse } from "@/lib/api/submit-inquiry";
 import { formatDate } from "../lib/utils";
-import { PetImage } from "@/app/listing/components/pet-image";
+import { PetImage } from "@/components/common/pet-image";
 
 interface InquirySuccessDialogProps {
   open: boolean;
