@@ -29,9 +29,9 @@ export default async function ListingPage({ searchParams }: ListingPageProps) {
 
   return (
     <div>
-      <div className="max-w-[90%] mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Pet Listings</h1>
-        <div className="mb-6">
+      <div className="sticky top-0 z-30 bg-background/90 backdrop-blur-md border-b md:static md:bg-transparent md:backdrop-blur-none md:border-none">
+        <div className="max-w-[90%] mx-auto py-4">
+          <h1 className="text-3xl font-bold mb-4">Pet Listings</h1>
           <PetFilters uniqueSpecies={uniqueSpecies} uniqueSizes={uniqueSizes} />
         </div>
       </div>
