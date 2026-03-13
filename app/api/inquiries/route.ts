@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
-const INQUIRY_API_URL = "https://pets-intrvw.up.railway.app/inquiries";
+const INQUIRY_API_URL = `${process.env.BACKEND_URL}/inquiries`;
 
 export async function POST(request: NextRequest) {
   try {
