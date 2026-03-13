@@ -40,7 +40,12 @@ export function InquiryFormDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
-        <Button disabled={!pet.available}>Inquire</Button>
+        <Button
+          disabled={!pet.available}
+          className={pet.available ? "cursor-pointer" : ""}
+        >
+          Inquire
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
