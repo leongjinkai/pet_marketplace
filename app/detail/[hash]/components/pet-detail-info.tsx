@@ -1,4 +1,5 @@
 import { Pet } from "@/types/listing-types";
+import { InquiryForm } from "./inquiry-form";
 
 interface PetDetailInfoProps {
   pet: Pet;
@@ -24,6 +25,9 @@ export function PetDetailInfo({ pet }: PetDetailInfoProps) {
         >
           {pet.available ? "Available" : "Not Available"}
         </p>
+      </div>
+      <div>
+        <InquiryForm pet={pet} />
       </div>
     </div>
   );

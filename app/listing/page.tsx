@@ -21,9 +21,11 @@ export default async function ListingPage({ searchParams }: ListingPageProps) {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-6">Pet Listings</h1>
-      <div className="mb-6">
-        <PetFilters uniqueSpecies={uniqueSpecies} uniqueSizes={uniqueSizes} />
+      <div className="max-w-[75%] mx-auto">
+        <h1 className="text-3xl font-bold mb-6">Pet Listings</h1>
+        <div className="mb-6">
+          <PetFilters uniqueSpecies={uniqueSpecies} uniqueSizes={uniqueSizes} />
+        </div>
       </div>
       <PetGrid pets={pets} />
     </div>
