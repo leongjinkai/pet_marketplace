@@ -91,6 +91,31 @@ npm start
 - `eslint.config.mjs` / `postcss.config.mjs` – Linting and PostCSS configuration
 - `package.json` / `package-lock.json` – Dependencies and scripts
 
+## Git Hooks (Husky)
+
+- **Husky setup**
+  - Husky is installed as a dev dependency and initialized via the `prepare` script in `package.json`:
+
+    ```bash
+    npm install
+    npm run prepare  # runs `husky install`
+    ```
+
+  - This creates/enables the `.husky` folder and hooks.
+
+- **Pre-commit hook**
+  - The `pre-commit` hook runs `lint-staged` to automatically lint and format staged files:
+
+    ```bash
+    npx lint-staged
+    ```
+
+  - Configured in `package.json` under `lint-staged`:
+    - `*.{js,jsx,ts,tsx}`: `eslint --fix` + `prettier --write`
+    - `*.{json,md,mdx,css,html,yml,yaml,scss}`: `prettier --write`
+
+This ensures code style and linting are enforced before every commit.
+
 ## Available Scripts
 
 - `npm run dev` – Start the development server
