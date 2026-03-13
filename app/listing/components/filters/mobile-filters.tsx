@@ -10,7 +10,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Spinner } from "@/components/ui/spinner";
+import { ApplyFiltersButton } from "./apply-filters-button";
+import { ClearFiltersButton } from "./clear-filters-button";
 import { AvailableFilter } from "../../lib/use-pet-filters";
 import type { FiltersViewModel } from "../pet-filters";
 
@@ -163,31 +164,15 @@ export function MobileFilters({
             </div>
 
             <div className="flex items-center justify-between gap-2 pt-2 border-t">
-              <Button
-                onClick={() => {
-                  resetFilters();
-                }}
-                variant="outline"
-                className="cursor-pointer"
+              <ClearFiltersButton
+                onClick={resetFilters}
                 disabled={isApplyingFilters || !hasSelectedFilters}
-              >
-                Clear
-              </Button>
-              <Button
+              />
+              <ApplyFiltersButton
                 onClick={handleApplyFilters}
-                className="flex-1 cursor-pointer"
-                variant="default"
-                disabled={isApplyingFilters}
-              >
-                {isApplyingFilters ? (
-                  <span className="inline-flex items-center justify-center gap-2">
-                    <Spinner className="size-3" />
-                    Applying…
-                  </span>
-                ) : (
-                  "Apply Filters"
-                )}
-              </Button>
+                isApplying={isApplyingFilters}
+                className="flex-1"
+              />
             </div>
           </div>
         </PopoverContent>

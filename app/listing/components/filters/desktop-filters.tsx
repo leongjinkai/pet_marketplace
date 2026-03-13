@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
+import { ApplyFiltersButton } from "./apply-filters-button";
+import { ClearFiltersButton } from "./clear-filters-button";
 import { SpeciesFilter } from "./species-filter";
 import { SizeFilter } from "./size-filter";
 import { AvailabilityFilter } from "./availability-filter";
@@ -46,29 +46,15 @@ export function DesktopFilters({
         availableFilter={availableFilter}
         handleAvailableChange={handleAvailableChange}
       />
-      <Button
+      <ApplyFiltersButton
         onClick={applyFilters}
-        variant="default"
-        className="ml-auto cursor-pointer"
-        disabled={isApplyingFilters}
-      >
-        {isApplyingFilters ? (
-          <span className="inline-flex items-center justify-center gap-2">
-            <Spinner className="size-4" />
-            Applying…
-          </span>
-        ) : (
-          "Apply Filters"
-        )}
-      </Button>
-      <Button
+        isApplying={isApplyingFilters}
+        className="ml-auto"
+      />
+      <ClearFiltersButton
         onClick={resetFilters}
-        variant="outline"
-        className="cursor-pointer"
         disabled={isApplyingFilters || !hasSelectedFilters}
-      >
-        Clear
-      </Button>
+      />
     </div>
   );
 }
